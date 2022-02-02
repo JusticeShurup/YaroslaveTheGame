@@ -1,0 +1,8 @@
+Buildings 1 
+dom TextureContainer\\GameObjects\\dom.png 250 250 3 97 250 0 0 58 216 97 0 95 250 155 0
+Fixtures 2
+stolb TextureContainer\\GameObjects\\Stolb.png 32 128 1 12 12 10 108
+house TextureContainer\\GameObjects\\nabrosokjirnogochlena.png 500 500 1 300 0 8 104
+Others 2
+skam1 TextureContainer\\GameObjects\\skameykawithoutperspektiva.png 44 22 1 44 22 0 0 
+skam2 TextureContainer\\GameObjects\\skameykawithperspektiva.png 44 22 1 44 22 0 0 

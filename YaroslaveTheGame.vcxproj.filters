@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Исходные файлы\Map">
+      <UniqueIdentifier>{9dd040f1-eb67-4b82-a6a4-f1aed981391c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Map">
+      <UniqueIdentifier>{6dd3eeb2-d44c-4744-a6b4-a16c3cd3aba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Animator">
+      <UniqueIdentifier>{ca3f7bd1-2357-4728-84f4-0c788eb6f834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Animator">
+      <UniqueIdentifier>{168712a7-274e-4fcf-ad78-97c32aa95c19}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Исходные файлы\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Tileset.cpp">
+      <Filter>Исходные файлы\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureContainer\TextureContainer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Исходные файлы\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Исходные файлы\Animator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameObject.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>Файлы заголовков\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Tileset.h">
+      <Filter>Файлы заголовков\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureContainer\TextureContainer.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Файлы заголовков\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Файлы заголовков\Animator</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,82 @@
+NES_Slave NES_Slave_-_Toby_Orbon_Free_Files 5
+ Idle 4
+  North 4 
+   Idle_North_frame_0.png
+   Idle_North_frame_1.png
+   Idle_North_frame_2.png
+   Idle_North_frame_3.png
+  South 4
+   Idle_South_frame_0.png
+   Idle_South_frame_1.png
+   Idle_South_frame_2.png
+   Idle_South_frame_3.png
+  West 4
+   Idle_West_frame_0.png
+   Idle_West_frame_1.png
+   Idle_West_frame_2.png
+   Idle_West_frame_3.png
+  East 4
+   Idle_East_frame_0.png
+   Idle_East_frame_1.png
+   Idle_East_frame_2.png
+   Idle_East_frame_3.png
+ Walk 4
+  North 4
+   Walk_North_frame_0.png
+   Walk_North_frame_1.png
+   Walk_North_frame_2.png
+   Walk_North_frame_3.png
+  South 4
+   Walk_South_frame_0.png
+   Walk_South_frame_1.png
+   Walk_South_frame_2.png
+   Walk_South_frame_3.png
+  West 4
+   Walk_West_frame_0.png
+   Walk_West_frame_1.png
+   Walk_West_frame_2.png
+   Walk_West_frame_3.png
+  East 4
+   Walk_East_frame_0.png
+   Walk_East_frame_1.png
+   Walk_East_frame_2.png
+   Walk_East_frame_3.png
+ Run 4
+  North 4 
+   Run_North_frame_0.png
+   Run_North_frame_1.png
+   Run_North_frame_2.png
+   Run_North_frame_3.png
+  South 4
+   Run_South_frame_0.png
+   Run_South_frame_1.png
+   Run_South_frame_2.png
+   Run_South_frame_3.png
+  West 4
+   Run_West_frame_0.png
+   Run_West_frame_1.png
+   Run_West_frame_2.png
+   Run_West_frame_3.png
+  East 4
+   Run_East_frame_0.png
+   Run_East_frame_1.png
+   Run_East_frame_2.png
+   Run_East_frame_3.png
+ Attack 4
+  North 1 
+   Attack_Pose_North_frame.png
+  South 1 
+   Attack_Pose_South_frame.png
+  West 1
+   Attack_Pose_West_frame.png
+  East 1 
+   Attack_Pose_East_frame.png
+ Hurt 4
+  North 1 
+   Hurt_North_frame.png
+  South 1 
+   Hurt_South_frame.png
+  West 1
+   Hurt_West_frame.png
+  East 1 
+   Hurt_East_frame.png
