@@ -7,6 +7,17 @@ Animation::Animation(std::string text_name, std::string anim_name, std::string d
 	animation_name = anim_name;
 	animation_duration = anim_dur;
 	direction = dir;
+	is_onetime = false;
+
+	animation_components = TextureContainer::getInstance()->getEntityTextures(text_name, anim_name, direction);
+}
+
+Animation::Animation(std::string text_name, std::string anim_name, std::string dir, float anim_dur, bool is_onetime) {
+	textures_name = text_name;
+	animation_name = anim_name;
+	animation_duration = anim_dur;
+	direction = dir;
+	is_onetime = true;
 
 	animation_components = TextureContainer::getInstance()->getEntityTextures(text_name, anim_name, direction);
 }
@@ -23,8 +34,10 @@ sf::Texture* Animation::getComponent(int index) {
 sf::Texture* Animation::getComponent(float elapsed_time) {
 	float segmentation = animation_duration / animation_components.size();
 
-	//BUG
-	for (int i = 0; i < animation_components.size(); i++) {
-		if (elapsed_time > segmentation * (i + 1) && elapsed_time < segmentation * (i + 2)) return animation_components[i];
-	}
+	if (elapsed_time >= animation_duration) return animation_components[0];
+	return animation_components[int(elapsed_time / segmentation)];
+}
+
+bool Animation::isOneTime() const{
+	return is_onetime;
 }

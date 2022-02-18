@@ -7,6 +7,7 @@
 #include "Map/Map.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Enemy.h"
 
 class Game
 {
@@ -32,6 +33,7 @@ private:
 	bool is_active;
 
 	Player* player;
-	std::vector<Entity*> entity;
+	Enemy* enemy;
+	std::vector<Enemy*> enemies;
 };
 #endif

@@ -15,18 +15,28 @@ public:
 
 	void removeGameObject(GameObject* game_object);
 	void removeGameObjectByIndex(int index);
-	GameObject* findGameObjectByCoordinates(sf::Vector2f coordinates);
-	GameObject findGameObjectByIndex(int index);
+
+	GameObject* getGameObjectByCoordinates(sf::Vector2f coordinates);
+	GameObject* getGameObjectByIndex(int index);
+	 
+	sf::Vector2i getSize();
+	sf::Vector2i getTilesetSize();
+
+	bool checkCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj);
+	int returnCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj);
+
+	void update(GameObject* game_obj);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
 	sf::Vector2i size;
+	sf::Vector2i tileset_size;
 
 	std::vector<std::vector<Tileset>> tileset_map;
 	std::vector<std::vector<std::string>> tileset_signs;
 
-	std::vector<GameObject> gameobject_map;
+	std::vector<GameObject*> gameobject_map;
 	std::vector<std::string> gameobject_names;
 };
 #endif

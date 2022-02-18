@@ -5,17 +5,17 @@
 
 Map::Map(std::string tilesets_map_filename, std::string gameobjects_map_filename) {
 	std::ifstream file(tilesets_map_filename);
-	file >> size.x >> size.y;
-	for (int i = 0; i < size.x; i++) {
+	file >> size.x >> size.y >> tileset_size.x >> tileset_size.y;
+	for (int i = 0; i < size.y; i++) {
 		std::vector<std::string> string;
 		std::vector<Tileset> tilesets;
-		for (int j = 0; j < size.y; j++) {
+		for (int j = 0; j < size.x; j++) {
 			std::string sign;
 			file >> sign;
 			int sost = sign[sign.size() - 1] - '0';
 			sign = sign.substr(0, sign.size() - 2);
 			string.push_back(sign);
-			tilesets.emplace_back(Tileset(TextureContainer::getInstance()->getTilesetTexture(sign, sost), sign, sf::Vector2f(32, 32), sf::Vector2f(j*32, i*32), sost));
+			tilesets.emplace_back(Tileset(TextureContainer::getInstance()->getTilesetTexture(sign, sost), sign, sf::Vector2f(tileset_size), sf::Vector2f(j*tileset_size.x, i*tileset_size.y), sost));
 			tilesets[j].setTempTexture(TextureContainer::getInstance()->getTilesetTexture(sign, sost));
 		}
 		tileset_signs.push_back(string);
@@ -38,13 +38,13 @@ Map::Map(std::string tilesets_map_filename, std::string gameobjects_map_filename
 			file >> hitbox_posx >> hitbox_posy;
 			hitbox_positions.push_back(sf::Vector2f(hitbox_posx, hitbox_posy));
 		}
-		gameobject_map.push_back(GameObject(TextureContainer::getInstance()->getGameObjectTexture(gameobj_name), sf::Vector2f(obj_width, obj_height),
+		gameobject_map.push_back(new GameObject(TextureContainer::getInstance()->getGameObjectTexture(gameobj_name), sf::Vector2f(obj_width, obj_height),
 			sf::Vector2f(obj_posx, obj_posy), hitbox_count, hitbox_sizes, hitbox_positions, gameobj_name));
 
 	}
 	file.close();
 	for (auto& g : gameobject_map) {
-		g.hideHitboxes(false);
+		g->hideHitboxes(true);
 	}
 }
 
@@ -61,7 +61,82 @@ void Map::changeTilesetTexture(int x, int y, sf::Texture* texture) {
 }
 
 void Map::addGameObject(GameObject* game_object) {
-	gameobject_map.push_back(*game_object);
+	gameobject_map.push_back(game_object);
+}
+
+void Map::removeGameObject(GameObject* game_object) {
+	for (int i = 0; i < gameobject_map.size(); i++) {
+		if (gameobject_map[i]->getObjectPosition() == game_object->getHitboxPosition()) {
+			gameobject_map.erase(gameobject_map.begin() + i);
+			break;
+		}
+	}
+}
+
+void Map::removeGameObjectByIndex(int index) {
+	gameobject_map.erase(gameobject_map.begin() + index);
+}
+	
+GameObject* Map::getGameObjectByCoordinates(sf::Vector2f coordinates) {
+	for (int i = 0; i < gameobject_map.size(); i++) {
+		if (gameobject_map[i]->getObjectPosition() == coordinates) {
+			return gameobject_map[i];
+		}
+	}
+}
+
+GameObject* Map::getGameObjectByIndex(int index) {
+	return gameobject_map[index];
+}
+
+sf::Vector2i Map::getSize() {
+	return size;
+}
+
+sf::Vector2i Map::getTilesetSize() {
+	return tileset_size;
+}
+
+bool Map::checkCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj) {
+	bool flag = false;
+	sf::RectangleShape hitboxnewpos(game_obj->getHitboxShape()->getSize());
+	hitboxnewpos.setPosition(coordinates);
+	for (int i = 0; i < gameobject_map.size(); i++) {
+		for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
+			if (gameobject_map[i] != game_obj) {
+				flag = gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().intersects(hitboxnewpos.getGlobalBounds());
+			}
+			if (flag) return flag;
+		}
+	}
+	return flag;
+}
+
+int Map::returnCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj) {
+	bool flag = false;
+	sf::RectangleShape hitboxnewpos(game_obj->getHitboxShape()->getSize());
+	hitboxnewpos.setPosition(coordinates);
+	for (int i = 0; i < gameobject_map.size(); i++) {
+		for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
+			if (gameobject_map[i] != game_obj) {
+				flag = gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().intersects(hitboxnewpos.getGlobalBounds()) || gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().contains(coordinates);
+			}
+			if (flag) return i;
+		}
+	}
+	return -1;
+}
+
+void Map::update(GameObject* game_obj) {
+	for (int i = 0; i < gameobject_map.size(); i++) {
+		for (int j = 0; j < gameobject_map.size()-1; j++) {
+			if (gameobject_map[j]->getHitboxPosition().y + gameobject_map[j]->getObjectShape()->getPosition().y > gameobject_map[j + 1]->getHitboxPosition().y + gameobject_map[j + 1]->getObjectShape()->getPosition().y) {
+				auto temp = gameobject_map[j];
+				gameobject_map[j] = gameobject_map[j + 1];
+				gameobject_map[j + 1] = temp;
+			}
+		}
+	}
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -71,6 +146,6 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 		}
 	}
 	for (int i = 0; i < gameobject_map.size(); i++) {
-		target.draw(gameobject_map[i]);
+		target.draw(*gameobject_map[i]);
 	}
 }

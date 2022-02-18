@@ -1,4 +1,5 @@
-40 50
+50 40
+32 32
 sdwdir3S1 vS2 vS2 vS2 vS2 vS2 vS2 sdwdir3S4 craS1 crS4 crS4 crS4 craS3 sdwdir3S3 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 VS1 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 vS1 snowS1 
 vS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 vS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 vS1 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 vS1 snowS1 
 vS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 vS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 snowS1 sdwdir3S1 craS1 crS4 crS4 crS4 craS3 sdwdir3S3 snowS1 snowS1 snowS1 snowS1 snowS1 vS1 aswhrdlnS1 aS1 aswhrdlnc1S1 aS1 aswhrdlnS3 vS1 snowS1 

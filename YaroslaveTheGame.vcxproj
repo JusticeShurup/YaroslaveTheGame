@@ -145,6 +145,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Map\Map.h" />

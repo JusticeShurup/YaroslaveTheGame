@@ -1,6 +1,7 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 #include <SFML/Graphics.hpp>
+#include "Map/Map.h"
 class Camera
 {
 public: 
@@ -12,6 +13,8 @@ public:
 	void setPosition(float x, float y);
 	void setPosition(sf::Vector2f position); 
 	
+	void update(sf::Vector2f position, Map* map);
+
 	sf::View* getView();
 private: 
 	sf::View view;

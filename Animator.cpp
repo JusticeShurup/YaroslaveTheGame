@@ -9,15 +9,38 @@ Animator::Animator(Entity* entity, std::string text_name) {
 	elapsed_time = 0;
 	textures_name = text_name;
 	this->entity = entity;
+	last_state = "Idle";
 
 	auto* cont = TextureContainer::getInstance();
-	for (int i = 0; i < 5; i++) {
-		std::map<std::string, Animation*> dir_anim; // Animations by direction
-		for (int j = 0; j < 4; j++) {
-			dir_anim.emplace(directions[j], new Animation(text_name, states[i], directions[j], 2));
-		}
-		animations.emplace(states[i], dir_anim);
+	std::map<std::string, Animation*> dir_anim; // Animations by direction
+	for (int i = 0; i < 4; i++) {
+		dir_anim.emplace(directions[i], new Animation(text_name, states[0], directions[i], 1));
 	}
+	animations.emplace(states[0], dir_anim);
+
+	dir_anim.clear();
+	for (int i = 0; i < 4; i++) {
+		dir_anim.emplace(directions[i], new Animation(text_name, states[1], directions[i], 1));
+	}
+	animations.emplace(states[1], dir_anim);
+
+	dir_anim.clear();
+	for (int i = 0; i < 4; i++) {
+		dir_anim.emplace(directions[i], new Animation(text_name, states[2], directions[i], 0.5));
+	}
+	animations.emplace(states[2], dir_anim);
+
+	dir_anim.clear();
+	for (int i = 0; i < 4; i++) {
+		dir_anim.emplace(directions[i], new Animation(text_name, states[3], directions[i], 0.5));
+	}
+	animations.emplace(states[3], dir_anim);
+
+	dir_anim.clear();
+	for (int i = 0; i < 4; i++) {
+		dir_anim.emplace(directions[i], new Animation(text_name, states[4], directions[i], 0.5));
+	}
+	animations.emplace(states[4], dir_anim);
 }
 
 Animator::~Animator() {
@@ -41,9 +64,9 @@ void Animator::setTexturesName(std::string text_name) {
 	for (int i = 0; i < 5; i++) {
 		std::map<std::string, Animation*> dir_anim; // Animations by direction
 		for (int j = 0; j < 4; j++) {
-			dir_anim.emplace(directions[j], new Animation(text_name, states[i], directions[j], 0.1));
+			dir_anim[directions[j]] = new Animation(text_name, states[i], directions[j], 0.5);
 		}
-		animations.emplace(states[i], dir_anim);
+		animations[states[i]] =  dir_anim;
 	}
 
 }
@@ -56,15 +79,20 @@ void Animator::update(float delta_time) {
 	elapsed_time += delta_time;
 	std::string state = entity->getState();
 	/*
-	int segmentation = animations[state]["South"]->getAnimationDuration() / 4;
-	for (int i = 0; i < 4; i++) {
-		std::cout << i << " " << elapsed_time << " " << segmentation * (i + 1) << " " << animations[state]["South"]->getAnimationDuration() / 4 << std::endl;
+	if (last_state != state) {
+		last_state = state;
+		elapsed_time = 0;
 	}
 	*/
 
-	entity->setTexture(animations[state]["South"]->getComponent(elapsed_time));
+	std::string direction = entity->getDirection();
 
-	if (elapsed_time > animations[state]["South"]->getAnimationDuration()) {
+	entity->setTexture(animations[state][direction]->getComponent(elapsed_time));
+
+	if (elapsed_time > animations[state][direction]->getAnimationDuration()) {
 		elapsed_time = 0;
+		if (animations[state][direction]->isOneTime()) {
+			entity->setState("Idle");
+		}
 	}
 }

@@ -60,6 +60,9 @@
     <ClCompile Include="Animator.cpp">
       <Filter>Исходные файлы\Animator</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Файлы заголовков\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

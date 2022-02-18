@@ -17,6 +17,8 @@ public:
 private: 
 	Entity* entity;
 
+	std::string last_state;
+
 	float elapsed_time; // Elapsed time since start
 	std::string textures_name;
 
