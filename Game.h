@@ -18,6 +18,8 @@ public:
 	void update();
 	void render();
 
+	void removeEnemy(Entity* enemy);
+
 private:
 	sf::RenderWindow* window;
 	sf::Event event;
@@ -33,7 +35,6 @@ private:
 	bool is_active;
 
 	Player* player;
-	Enemy* enemy;
 	std::vector<Enemy*> enemies;
 };
 #endif

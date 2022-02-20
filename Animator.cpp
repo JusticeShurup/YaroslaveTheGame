@@ -1,6 +1,7 @@
 #include "Animator.h"
 #include "TextureContainer/TextureContainer.h"
 #include "Entity.h"
+#include "IdleState.h"
 #include <iostream>
 
 std::string states[5]{ "Idle", "Walk", "Run", "Attack", "Hurt" };
@@ -77,13 +78,11 @@ std::string Animator::getTexturesName() {
 
 void Animator::update(float delta_time) {
 	elapsed_time += delta_time;
-	std::string state = entity->getState();
-	/*
+	std::string state = entity->getState()->getName();
 	if (last_state != state) {
 		last_state = state;
 		elapsed_time = 0;
 	}
-	*/
 
 	std::string direction = entity->getDirection();
 
@@ -92,7 +91,7 @@ void Animator::update(float delta_time) {
 	if (elapsed_time > animations[state][direction]->getAnimationDuration()) {
 		elapsed_time = 0;
 		if (animations[state][direction]->isOneTime()) {
-			entity->setState("Idle");
+			entity->setState(new IdleState(entity));
 		}
 	}
 }

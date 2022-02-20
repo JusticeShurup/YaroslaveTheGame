@@ -3,15 +3,34 @@
 #include "GameObject.h"
 #include "Map/Map.h"
 
+class State;
+
 class Animator;
+
+class Game;
 
 class Entity : public GameObject
 {
+protected: 
+	Game* game;
+
 public: 
 	Entity();
 	Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size);
 	Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name);
-	~Entity();
+	virtual ~Entity();
+
+	int sign(float value);
+
+	void setGame(Game* game);
+	Game* getGame();
+
+	sf::Text* getNickname();
+
+	sf::RectangleShape* getHealthBar();
+	void updateHealthBar();
+	sf::RectangleShape* getStaminaBar();
+	void updateStaminaBar();
 
 	void setName(std::string name);
 	std::string getName() const;
@@ -31,8 +50,8 @@ public:
 	void setMaxHPValue(int value); // set HP limit value 
 	int getMaxHPValue() const; // HP limit return value
 
-	void setStaminaValue(int value); // set stamina value
-	int getStaminaValue() const; // stamina return value
+	void setStaminaValue(float value); // set stamina value
+	float getStaminaValue() const; // stamina return value
 
 	void setMaxStaminaValue(int value); // set stamina limit value	
 	int getMaxStaminaValue() const; // stamina limit return value
@@ -47,16 +66,23 @@ public:
 	int getDamageValue(); // get damage value
 	//Specifications
 
+	void setCanSwitchState(bool flag);
+	bool canSwitchState();
+
+	
 	virtual void update(float delta_time);
-	void updateAnimator(float delta_time, std::string state);
+	void updateAnimator(float delta_time, State* state);
 	
 	Animator* getAnimator();
 
-	std::string getState();
-	void setState(std::string state);
+	State* getState();
+	void setState(State* state);
 
 	std::string getDirection();
 	void setDirection(std::string direction);
+
+	float calcDistance(sf::Vector2f target_position); // Calculate distance to target from current position
+	float calcDistance(sf::Vector2f target_position, sf::Vector2f own_position); // Calculate distance to target from smth position
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private: 
@@ -65,7 +91,7 @@ private:
 	int health_points; 
 	int max_health_points;
 	
-	int stamina_points;
+	float stamina_points;
 	int max_stamina_points;
 	float stam_per_tick;
 	int stam_per_attack;
@@ -82,7 +108,8 @@ private:
 	sf::RectangleShape* health_bar;
 	sf::RectangleShape* stamina_bar;
 
-	std::string state;
+	State* state;
+
 	std::string direction;
 	Animator* animator;
 };

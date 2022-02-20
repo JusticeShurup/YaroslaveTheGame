@@ -25,6 +25,12 @@
     <Filter Include="Файлы заголовков\Animator">
       <UniqueIdentifier>{168712a7-274e-4fcf-ad78-97c32aa95c19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\States">
+      <UniqueIdentifier>{37063035-730c-4673-9765-4d12869604ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\States">
+      <UniqueIdentifier>{8d87f534-e015-4772-b006-78f5631e1164}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -63,6 +69,24 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="WalkState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="RunState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="HurtState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -97,6 +121,24 @@
     </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="WalkState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="RunState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="HurtState.h">
+      <Filter>Файлы заголовков\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

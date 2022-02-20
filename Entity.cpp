@@ -2,6 +2,13 @@
 #include "TextureContainer/TextureContainer.h"
 #include <iostream>
 #include "Animator.h"
+#include "IdleState.h"
+
+int Entity::sign(float value) {
+	if (value > 0) return 1;
+	else if (value == 0) return 0;
+	else return -1;
+}
 
 Entity::Entity() {
 	health_points = 0;
@@ -24,7 +31,7 @@ Entity::Entity() {
 	switch_state_timer = 0;
 	can_switch_state = true;
 
-	state = "Idle";
+	state = new IdleState(this);
 	direction = "South";
 }
 
@@ -51,7 +58,7 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size) : GameObject(
 	switch_state_timer = 0;
 	can_switch_state = true;
 
-	state = "Idle";
+	state = new IdleState(this);
 	direction = "South";
 }
 
@@ -74,6 +81,7 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 
 	stamina_points = maxStam;
 	max_stamina_points = maxStam;
+
 	stam_per_tick = 1;
 	stam_per_attack = 10;
 	lost_stam_timer = 0;
@@ -97,13 +105,43 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	switch_state_timer = 0;
 	can_switch_state = true;
 
-	state = "Idle";
+	state = new IdleState(this);
 	direction = "South";
 }
 
 Entity::~Entity() {
+	delete state;
+	delete animator;
 	delete health_bar;
 	delete stamina_bar;
+}
+
+void Entity::setGame(Game* game) {
+	this->game = game;
+}
+
+Game* Entity::getGame() {
+	return game;
+}
+
+sf::Text* Entity::getNickname() {
+	return &nickname;
+}
+
+sf::RectangleShape* Entity::getHealthBar() {
+	return health_bar;
+}
+
+void Entity::updateHealthBar() {
+	health_bar->setSize(sf::Vector2f((getObjectShape()->getSize().x / max_health_points) * health_points, health_bar->getSize().y));
+}
+
+sf::RectangleShape* Entity::getStaminaBar() {
+	return stamina_bar;
+}
+
+void Entity::updateStaminaBar() {
+	stamina_bar->setSize(sf::Vector2f((getObjectShape()->getSize().x / max_stamina_points) * stamina_points, stamina_bar->getSize().y));
 }
 
 //Name
@@ -155,11 +193,11 @@ int Entity::getMaxHPValue() const {
 	return max_health_points;
 }
 
-void Entity::setStaminaValue(int value) {
+void Entity::setStaminaValue(float value) {
 	stamina_points = value;
 }
 
-int Entity::getStaminaValue() const {
+float Entity::getStaminaValue() const {
 	return stamina_points;
 }
 
@@ -203,48 +241,19 @@ int Entity::getDamageValue() {
 }
 //Specifications
 
-void Entity::update(float delta_time) {
-	lost_stam_timer += delta_time; 
-	add_stam_timer += delta_time;
-	float stam = stamina_points;
-	if(!can_switch_state)switch_state_timer += delta_time;
-
-
-	sf::Vector2f pos = getObjectPosition();
-	nickname.setPosition(pos - sf::Vector2f(nickname.getGlobalBounds().width / 2 - getGlobalBounds().width / 2, 5));
-	if (state == "Run" && lost_stam_timer > 0.2 && stam - stam_per_tick > 0) {
-		stam -= stam_per_tick;
-		lost_stam_timer = 0;
-
-	}
-	if ((state == "Idle" || state == "Walk") && add_stam_timer > 0.2 && stam + stam_per_tick < max_stamina_points) {
-		stam += stam_per_tick;
-		add_stam_timer = 0;
-	}
-	if (state == "Attack" && can_lost_stam && stam > stam_per_attack) {
-		stam -= stam_per_attack;
-		can_lost_stam = false;
-		can_switch_state = false;
-	}
-
-	if (switch_state_timer > 0.5) {
-		switch_state_timer = 0;
-		can_switch_state = true;
-	}
-
-	if (stamina_points > stam_per_attack && state != "Attack") can_lost_stam = true;
-
-	stamina_points = stam;
-
-	stamina_bar->setSize(sf::Vector2f((getObjectShape()->getSize().x / max_stamina_points) * stamina_points, stamina_bar->getSize().y));
-	health_bar->setSize(sf::Vector2f((getObjectShape()->getSize().x / max_health_points) * health_points, health_bar->getSize().y));
-
-	if (stamina_bar) stamina_bar->setPosition(pos.x + (direction == "East" ? 0.5 : -0.5), pos.y + 4 + (direction == "South" ? 0.25 : -0.25));
-	if (health_bar) health_bar->setPosition(pos.x + (direction == "East" ? 0.5 : -0.5), pos.y + 2 + (direction == "South" ? 0.25 : -0.25));
-	updateAnimator(delta_time, state);
+void Entity::setCanSwitchState(bool flag) {
+	can_switch_state = flag;
 }
 
-void Entity::updateAnimator(float delta_time, std::string state) {
+bool Entity::canSwitchState() {
+	return can_switch_state;
+}
+
+void Entity::update(float delta_time) {
+	state->update(delta_time);
+}
+
+void Entity::updateAnimator(float delta_time, State* state) {
 	animator->update(delta_time);
 }
 
@@ -254,29 +263,12 @@ Animator* Entity::getAnimator() {
 	return animator;
 }
 
-std::string Entity::getState() {
+State* Entity::getState() {
 	return state;
 }
 
-void Entity::setState(std::string state) {
-	if (state == "Run") {
-		if (stamina_points > 0) {
-			this->state = "Run";
-		}
-		else {
-			this->state = "Idle";
-		}
-		return;
-	}
-	if (state == "Attack") {
-		if (stamina_points > 10) {
-			this->state = "Attack";
-		}
-		else if(can_switch_state) {
-			this->state = "Idle";
-		}
-		return;
-	}
+void Entity::setState(State* state) {
+	delete this->state;
 	this->state = state;
 }
 
@@ -289,9 +281,17 @@ void Entity::setDirection(std::string dir) {
 }
 //Animator
 
+float Entity::calcDistance(sf::Vector2f pos) {
+	return sqrt(pow(pos.x - (getObjectShape()->getPosition().x + getHitboxPosition().x), 2) + pow(pos.y - (getObjectShape()->getPosition().y + getHitboxPosition().y), 2));
+}
+
+float Entity::calcDistance(sf::Vector2f pos, sf::Vector2f new_pos) {
+	return sqrt(pow(pos.x - new_pos.x, 2) + pow(pos.y - new_pos.y, 2));
+}
+
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 	GameObject::draw(target, states);
-	target.draw(nickname);
+	//target.draw(nickname);
 	if (health_bar) target.draw(*health_bar);
 	if (stamina_bar) target.draw(*stamina_bar);
 }

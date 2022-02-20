@@ -8,10 +8,6 @@ public:
 
 	void update(float delta_time, Entity* target, Map* map);
 
-
-	float calcDistance(sf::Vector2f target_position); // Calculate distance to target from current position
-	float calcDistance(sf::Vector2f target_position, sf::Vector2f own_position); // Calculate distance to target from smth position
-
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private: 
 	bool can_move;
