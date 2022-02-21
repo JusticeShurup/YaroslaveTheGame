@@ -28,14 +28,14 @@ void IdleState::update(float delta_time) {
 }
 
 void IdleState::update(float delta_time, Entity* target, Map* map) {
-	update(delta_time);
+	entity->update(delta_time);
 	entity->updateAnimator(delta_time, this);
 	float distance = entity->calcDistance(target->getObjectPosition() + target->getHitboxPosition());
 
 	int distX = entity->getHitboxShape()->getSize().x + 1; // Расстояние, при котором враг уже сталкивается с объектом по X
 	int distY = entity->getHitboxShape()->getSize().y + 1; // Расстояние, при котором враг уже сталкивается с объектом по X
 
-	if (distance > 100 && distance < 300) {
+	if (distance > 100 && distance < 300 && entity->getStaminaValue() >= 10) {
 		entity->setState(new RunState(entity));
 		return;
 	}

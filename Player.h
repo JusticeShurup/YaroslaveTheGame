@@ -11,9 +11,6 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
-	bool can_move;
-	bool can_attack;
-	float time_after_attack;
 
 	int level;
 	int current_xp;

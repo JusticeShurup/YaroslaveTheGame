@@ -26,7 +26,7 @@ void WalkState::update(float delta_time) {
 }
 
 void WalkState::update(float delta_time, Entity* target, Map* map) {
-	update(delta_time);
+	entity->update(delta_time);
 
 	float distance = entity->calcDistance(target->getObjectPosition() + target->getHitboxPosition());
 

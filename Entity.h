@@ -90,6 +90,8 @@ private:
 
 	int health_points; 
 	int max_health_points;
+	float add_hp_timer;
+	int add_hp_time; // time to add 1 HP
 	
 	float stamina_points;
 	int max_stamina_points;

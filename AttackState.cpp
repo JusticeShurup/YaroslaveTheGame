@@ -40,8 +40,8 @@ void AttackState::update(float delta_time, Entity* target, Map* map) {
 		sf::IntRect range(position, size);
 
 		if (range.contains(sf::Vector2i(target->getObjectPosition() + target->getHitboxPosition()))) {
-			target->setState(new HurtState(target, entity->getDamageValue()));
+			target->setState(new HurtState(target, entity->getDamageValue(), entity->getDirection()));
 		}
 	}
-	update(delta_time);
+	entity->update(delta_time);
 }

@@ -13,10 +13,14 @@ void RunState::update(float delta_time) {
 
 	sf::Vector2f pos = entity->getObjectPosition();
 
-	if (lost_stam_timer > 0.2 && entity->getStaminaValue() - entity->getStamPerTick() > 0) {
+	if (lost_stam_timer > 0.2 && entity->getStaminaValue() - entity->getStamPerTick() >= 0) {
 		entity->setStaminaValue(entity->getStaminaValue() - entity->getStamPerTick());
 		entity->updateStaminaBar();
 		lost_stam_timer = 0;
+	}
+	else if (entity->getStaminaValue() <= 0) {
+		entity->setState(new WalkState(entity));
+		return;
 	}
 
 	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(pos.x + (entity->getDirection() == "East" ? 0.5 : -0.5), pos.y + 4 + (entity->getDirection() == "South" ? 0.25 : -0.25));
@@ -25,7 +29,7 @@ void RunState::update(float delta_time) {
 }
 
 void RunState::update(float delta_time, Entity* target, Map* map) {
-	update(delta_time);
+	entity->update(delta_time);
 
 
 	float X0 = entity->getObjectPosition().x; //  оордината X - от левого верхнего угла спрайта

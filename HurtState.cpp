@@ -3,12 +3,13 @@
 #include "Entity.h"
 #include "Game.h"
 
-HurtState::HurtState(Entity* entity, float damage_taken) : State(entity) {
+HurtState::HurtState(Entity* entity, float damage_taken, std::string attack_dir) : State(entity) {
 	name = "Hurt";
 	switch_state_timer = 0;
 	this->damage_taken = damage_taken;
 	is_damage_received = false;
 	entity->setCanSwitchState(false);
+	attack_direction = attack_dir;
 }
 
 void HurtState::update(float delta_time) {
@@ -17,11 +18,24 @@ void HurtState::update(float delta_time) {
 	sf::Vector2f pos = entity->getObjectPosition();
 	std::string dir = entity->getDirection();
 	
+	if (attack_direction == "South") {
+		entity->setPosition(pos.x, pos.y + 40 * delta_time);
+		entity->setDirection("North");
+	}
+	else if (attack_direction == "West") {
+		entity->setPosition(pos.x - 40 * delta_time, pos.y);
+		entity->setDirection("East");
+	}
+	else if (attack_direction == "North") {
+		entity->setPosition(pos.x, pos.y - 40 * delta_time);
+		entity->setDirection("South");
+	}
 
-	if (dir == "North") entity->setPosition(pos.x, pos.y + 40 * 0.5 * delta_time);
-	else if (dir == "East") entity->setPosition(pos.x - 40 * 0.5 * delta_time, pos.y);
-	else if (dir == "South") entity->setPosition(pos.x, pos.y - 40 * 0.5 * delta_time);
-	else if (dir == "West") entity->setPosition(pos.x + 40 * 0.5 * delta_time , pos.y);
+	else if (attack_direction == "East") {
+		entity->setPosition(pos.x + 40 * delta_time, pos.y);
+		entity->setDirection("West");
+	}
+
 
 	if (!is_damage_received) {
 		is_damage_received = true;

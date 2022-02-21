@@ -21,7 +21,7 @@ Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 }
 
 void Player::update(sf::Event& event, float dt, Map* map) {
-	getState()->update(dt);
+	Entity::update(dt);
 	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	float speed = getSpeedValue();
 	float dx = 0;
@@ -34,7 +34,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 				dy = speed * dt * (-500);
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && getStaminaValue() > 10) {
 					dy = speed * dt * (-500) * 1.5;
 					if (getState()->getName() != "Run") setState(new RunState(this));
 				}
@@ -45,7 +45,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 				dy = speed * dt * 500;
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && getStaminaValue() > 10) {
 					dy = speed * dt * (500) * 1.5;
 					if (getState()->getName() != "Run") setState(new RunState(this));
 				}
@@ -56,7 +56,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 				dx = speed * dt * (-500);
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && getStaminaValue() > 10) {
 					dx = speed * dt * (-500) * 1.5;
 					if (getState()->getName() != "Run") setState(new RunState(this));
 				}
@@ -67,7 +67,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 				dx = speed * dt * 500;
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && getStaminaValue() > 10) {
 					dx = speed * dt * (500) * 1.5;
 					if (getState()->getName() != "Run") setState(new RunState(this));
 				}
@@ -77,7 +77,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 				setDirection("East");
 			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canSwitchState()) {
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && getStaminaValue() > getStamPerAttack() && canSwitchState()) {
 			setState(new AttackState(this));
 
 			sf::Vector2i position; // attack range position
@@ -90,7 +90,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 
 			std::vector<Entity*> entity = map->getEntityInRange(sf::IntRect(position, size));
 			for (int i = 0; i < entity.size(); i++) {
-				entity[i]->setState(new HurtState(entity[i], getDamageValue()));
+				entity[i]->setState(new HurtState(entity[i], getDamageValue(), getDirection()));
 			}
 
 		}

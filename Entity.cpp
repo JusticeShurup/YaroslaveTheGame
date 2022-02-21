@@ -21,6 +21,8 @@ Entity::Entity() {
 	lost_stam_timer = 0;
 	add_stam_timer = 0;
 	can_lost_stam = false;
+	add_hp_time = 5;
+	add_hp_timer = 0;
 
 	damage = 0;
 	speed = 0;
@@ -46,6 +48,8 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size) : GameObject(
 	lost_stam_timer = 0;
 	add_stam_timer = 0;
 	can_lost_stam = false;
+	add_hp_time = 5;
+	add_hp_timer = 0;
 
 	damage = 0;
 	speed = 0;
@@ -87,6 +91,8 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	lost_stam_timer = 0;
 	add_stam_timer = 0;
 	can_lost_stam = true;
+	add_hp_time = 5;
+	add_hp_timer = 0;
 
 	this->speed = speed;
 	this->damage = damage;
@@ -250,6 +256,14 @@ bool Entity::canSwitchState() {
 }
 
 void Entity::update(float delta_time) {
+	add_hp_timer += delta_time;
+	if (add_hp_timer >= add_hp_time && health_points < 100) {
+		add_hp_timer = 0;
+		health_points += 1;
+		std::cout << health_points << std::endl;
+		updateHealthBar();
+	}
+
 	state->update(delta_time);
 }
 

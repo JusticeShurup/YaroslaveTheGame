@@ -12,8 +12,6 @@ public:
     virtual void update(float delta_time, Entity* target, Map* map) override;
 
 private: 
-	sf::SoundBuffer buffer;
-	sf::Sound sound;
 	float sound_timer;
 	
     float add_stam_timer;
