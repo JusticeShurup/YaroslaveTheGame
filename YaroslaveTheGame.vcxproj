@@ -157,6 +157,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RunState.cpp" />
+    <ClCompile Include="Sounds\SoundContainer.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="TextureContainer\TextureContainer.cpp" />
     <ClCompile Include="WalkState.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RunState.h" />
+    <ClInclude Include="Sounds\SoundContainer.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="TextureContainer\TextureContainer.h" />
     <ClInclude Include="WalkState.h" />

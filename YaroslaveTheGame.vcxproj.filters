@@ -31,11 +31,20 @@
     <Filter Include="Файлы заголовков\States">
       <UniqueIdentifier>{8d87f534-e015-4772-b006-78f5631e1164}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\GameObjects">
+      <UniqueIdentifier>{4ee77ab3-7059-4aaf-b2c6-0663e607d1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\GameObjects">
+      <UniqueIdentifier>{b9ee56aa-389d-4fae-a66a-8be3d620f4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Containers">
+      <UniqueIdentifier>{55466cd3-a868-4110-9cfe-58fa2069f9e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Containers">
+      <UniqueIdentifier>{1bd41bde-bf55-4b41-a8b2-d872321b6adf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -48,16 +57,7 @@
     <ClCompile Include="Map\Tileset.cpp">
       <Filter>Исходные файлы\Map</Filter>
     </ClCompile>
-    <ClCompile Include="TextureContainer\TextureContainer.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
@@ -65,9 +65,6 @@
     </ClCompile>
     <ClCompile Include="Animator.cpp">
       <Filter>Исходные файлы\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>Исходные файлы\States</Filter>
@@ -87,11 +84,26 @@
     <ClCompile Include="HurtState.cpp">
       <Filter>Исходные файлы\States</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Исходные файлы\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Исходные файлы\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Исходные файлы\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Исходные файлы\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureContainer\TextureContainer.cpp">
+      <Filter>Исходные файлы\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Sounds\SoundContainer.cpp">
+      <Filter>Исходные файлы\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObject.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -101,16 +113,7 @@
     <ClInclude Include="Map\Tileset.h">
       <Filter>Файлы заголовков\Map</Filter>
     </ClInclude>
-    <ClInclude Include="TextureContainer\TextureContainer.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
@@ -118,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Файлы заголовков\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
       <Filter>Файлы заголовков\States</Filter>
@@ -139,6 +139,24 @@
     </ClInclude>
     <ClInclude Include="HurtState.h">
       <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Файлы заголовков\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Файлы заголовков\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Файлы заголовков\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Файлы заголовков\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sounds\SoundContainer.h">
+      <Filter>Файлы заголовков\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureContainer\TextureContainer.h">
+      <Filter>Файлы заголовков\Containers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

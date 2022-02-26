@@ -14,7 +14,8 @@ public:
 
 private:
 	float lost_stam_timer;
-	
+	float sound_timer;
+
 	bool walk_only_X;
 	float elapsed_dist_x;
 	float dist_x;

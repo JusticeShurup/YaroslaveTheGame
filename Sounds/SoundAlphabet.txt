@@ -1,0 +1,8 @@
+Walk 1 
+Sounds\\walk.wav
+Run 1
+Sounds\\walk.wav
+Attack 1
+Sounds\\punch.wav
+Hurt 1
+Sounds\\hurt.wav

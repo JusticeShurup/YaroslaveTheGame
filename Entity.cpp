@@ -24,6 +24,9 @@ Entity::Entity() {
 	add_hp_time = 5;
 	add_hp_timer = 0;
 
+	is_in_fight = false;
+	in_fight_timer = 0;
+
 	damage = 0;
 	speed = 0;
 	health_bar = nullptr;
@@ -50,6 +53,9 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size) : GameObject(
 	can_lost_stam = false;
 	add_hp_time = 5;
 	add_hp_timer = 0;
+
+	is_in_fight = false;
+	in_fight_timer = 0;
 
 	damage = 0;
 	speed = 0;
@@ -93,6 +99,9 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	can_lost_stam = true;
 	add_hp_time = 5;
 	add_hp_timer = 0;
+
+	is_in_fight = false;
+	is_in_fight = true;
 
 	this->speed = speed;
 	this->damage = damage;
@@ -245,6 +254,14 @@ void Entity::setDamageValue(int value) {
 int Entity::getDamageValue() {
 	return damage;
 }
+
+void Entity::setIsInFight(bool flag) {
+	is_in_fight = flag;
+}
+
+bool Entity::isInFignt() {
+	return is_in_fight;
+}
 //Specifications
 
 void Entity::setCanSwitchState(bool flag) {
@@ -257,10 +274,17 @@ bool Entity::canSwitchState() {
 
 void Entity::update(float delta_time) {
 	add_hp_timer += delta_time;
+	if(is_in_fight) in_fight_timer += delta_time;
+	
+	if (in_fight_timer > 10) {
+		is_in_fight = false;
+		in_fight_timer = 0;
+	}
+
 	if (add_hp_timer >= add_hp_time && health_points < 100) {
+
 		add_hp_timer = 0;
-		health_points += 1;
-		std::cout << health_points << std::endl;
+		health_points += 1 * (is_in_fight ? 1 : 10);
 		updateHealthBar();
 	}
 

@@ -5,13 +5,18 @@
 
 RunState::RunState(Entity* entity) : State(entity){
 	name = "Run";
+	sound_timer = 0;
 }
 
 void RunState::update(float delta_time) {
 	lost_stam_timer += delta_time;
-
+	sound_timer = 0;
 
 	sf::Vector2f pos = entity->getObjectPosition();
+
+	if (sound_timer > 0.25) {
+		SoundContainer::getInstance()->getSoundByName(name)->play();
+	}
 
 	if (lost_stam_timer > 0.2 && entity->getStaminaValue() - entity->getStamPerTick() >= 0) {
 		entity->setStaminaValue(entity->getStaminaValue() - entity->getStamPerTick());
@@ -23,8 +28,8 @@ void RunState::update(float delta_time) {
 		return;
 	}
 
-	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(pos.x + (entity->getDirection() == "East" ? 0.5 : -0.5), pos.y + 4 + (entity->getDirection() == "South" ? 0.25 : -0.25));
-	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(pos.x + (entity->getDirection() == "East" ? 0.5 : -0.5), pos.y + 2 + (entity->getDirection() == "South" ? 0.25 : -0.25));
+	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(pos.x, pos.y + 4);
+	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(pos.x, pos.y + 2);
 	entity->updateAnimator(delta_time, this);
 }
 

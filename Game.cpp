@@ -2,6 +2,7 @@
 #include "TextureContainer/TextureContainer.h"
 #include <iostream>
 #include "Player.h"
+#include "Sounds/SoundContainer.h"
 
 Game::Game() {
 	settings.antialiasingLevel = 10;
@@ -9,6 +10,7 @@ Game::Game() {
 
 	event = sf::Event();
 	TextureContainer::getInstance(); 
+	SoundContainer::getInstance();
 	map = new Map("Map\\Map.txt", "Map\\GameObjectsMap.txt");
 
 
@@ -68,6 +70,12 @@ void Game::update() {
 		enemies[0]->setNewHitboxPosition(sf::Vector2f(4, 8));
 		map->addEntity(enemies[0]);
 		enemies[0]->setGame(this);
+
+		enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 10, "Churka"));
+		enemies[1]->setPosition(8 * 32, 5 * 32);
+		enemies[1]->setNewHitboxPosition(sf::Vector2f(4, 8));
+		map->addEntity(enemies[1]);
+		enemies[1]->setGame(this);
 	}
 
 	map->update(player);

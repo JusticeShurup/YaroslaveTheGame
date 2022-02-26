@@ -14,5 +14,7 @@ private:
 
 	int level;
 	int current_xp;
+
+	bool damage_delivered;
 };
 #endif

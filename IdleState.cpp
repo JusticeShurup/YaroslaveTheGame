@@ -2,13 +2,14 @@
 #include "WalkState.h"
 #include "Entity.h"
 #include "RunState.h"
+#include "AttackState.h"
 
 IdleState::IdleState(Entity* entity) :
 	State(entity) {
 	add_stam_timer = 0;
 	name = "Idle";
-	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(entity->getObjectPosition().x + (entity->getDirection() == "East" ? 0.5 : -0.5), entity->getObjectPosition().y + 4 + (entity->getDirection() == "South" ? 0.25 : -0.25));
-	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(entity->getObjectPosition().x + (entity->getDirection() == "East" ? 0.5 : -0.5), entity->getObjectPosition().y + 2 + (entity->getDirection() == "South" ? 0.25 : -0.25));
+	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(entity->getObjectPosition().x, entity->getObjectPosition().y + 4);
+	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(entity->getObjectPosition().x, entity->getObjectPosition().y + 2);
 }
 
 void IdleState::update(float delta_time) {
@@ -21,8 +22,8 @@ void IdleState::update(float delta_time) {
 		entity->updateStaminaBar();
 	}
 
-	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(entity->getObjectPosition().x + (entity->getDirection() == "East" ? 0.5 : -0.5), entity->getObjectPosition().y + 4 + (entity->getDirection() == "South" ? 0.25 : -0.25));
-	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(entity->getObjectPosition().x + (entity->getDirection() == "East" ? 0.5 : -0.5), entity->getObjectPosition().y + 2 + (entity->getDirection() == "South" ? 0.25 : -0.25));
+	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(entity->getObjectPosition().x, entity->getObjectPosition().y + 4);
+	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(entity->getObjectPosition().x, entity->getObjectPosition().y + 2);
 
 	entity->updateAnimator(delta_time, this);
 }
@@ -41,6 +42,9 @@ void IdleState::update(float delta_time, Entity* target, Map* map) {
 	}
 	else if (distance > 22 && distance < 100) {
 		entity->setState(new WalkState(entity));
+	}
+	else if (distance < 22) {
+		entity->setState(new AttackState(entity));
 	}
 
 }

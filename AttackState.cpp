@@ -7,6 +7,7 @@ AttackState::AttackState(Entity* entity) : State(entity){
 	switch_state_timer = 0;
 	is_stamina_lost = false;
 	name = "Attack";
+	entity->setIsInFight(true);
 }
 
 void AttackState::update(float delta_time) {
@@ -16,6 +17,7 @@ void AttackState::update(float delta_time) {
 		entity->updateStaminaBar();
 		is_stamina_lost = true;
 		entity->setCanSwitchState(false);
+		SoundContainer::getInstance()->getSoundByName(name)->play();
 	}
 	if (switch_state_timer > 0.5) {
 		entity->setCanSwitchState(true);
@@ -40,7 +42,7 @@ void AttackState::update(float delta_time, Entity* target, Map* map) {
 		sf::IntRect range(position, size);
 
 		if (range.contains(sf::Vector2i(target->getObjectPosition() + target->getHitboxPosition()))) {
-			target->setState(new HurtState(target, entity->getDamageValue(), entity->getDirection()));
+			target->setState(new HurtState(target, entity->getDamageValue(), entity->getDirection(), map));
 		}
 	}
 	entity->update(delta_time);

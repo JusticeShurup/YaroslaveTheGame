@@ -61,6 +61,13 @@ void Map::changeTilesetTexture(int x, int y, sf::Texture* texture) {
 	tileset->setTexture(texture);
 }
 
+bool Map::isEntity(GameObject* game_object) {
+	for (int i = 0; i < entity.size(); i++)
+		if (game_object == entity[i])
+			return true;
+	return false;
+}
+
 void Map::addGameObject(GameObject* game_object) {
 	for (int i = 0; i < gameobject_map.size(); i++) {
 		if (gameobject_map[i] == game_object) {
@@ -102,7 +109,8 @@ void Map::removeGameObjectByIndex(int index) {
 std::vector<Entity*> Map::getEntityInRange(sf::IntRect range) {
 	std::vector<Entity*> entity;
 	for (int i = 0; i < this->entity.size(); i++) {
-		if (range.contains(sf::Vector2i(this->entity[i]->getObjectPosition() + this->entity[i]->getHitboxPosition()))) {
+		sf::Vector2f hitbox = this->entity[i]->getHitboxShape()->getSize(); 
+		if (range.contains(sf::Vector2i(this->entity[i]->getObjectPosition() + this->entity[i]->getHitboxPosition() + sf::Vector2f(hitbox.x / 2, hitbox.y / 2)))) {
 			entity.push_back(this->entity[i]);
 		}
 	}
@@ -139,13 +147,15 @@ bool Map::checkCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj) 
 	sf::RectangleShape hitboxnewpos(game_obj->getHitboxShape()->getSize());
 	hitboxnewpos.setPosition(coordinates);
 	for (int i = 0; i < gameobject_map.size(); i++) {
-		for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
+		if (!isEntity(gameobject_map[i])) {
+			for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
 				if (gameobject_map[i] != game_obj) {
 					flag = gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().intersects(hitboxnewpos.getGlobalBounds());
-				}	
+				}
 				if (flag) return flag;
 			}
 		}
+	}
 	return flag;
 }
 
@@ -154,13 +164,11 @@ int Map::returnCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj) 
 	sf::RectangleShape hitboxnewpos(game_obj->getHitboxShape()->getSize());
 	hitboxnewpos.setPosition(coordinates);
 	for (int i = 0; i < gameobject_map.size(); i++) {
-		for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
+		if (!isEntity(game_obj)) {
+			for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
 				if (gameobject_map[i] != game_obj) {
-					bool flag1 = false;
-					for (int z = 0; z < entity.size(); z++) {
-						flag1 = gameobject_map[i] == entity[z];
-					}
-					if (!flag1) flag = gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().intersects(hitboxnewpos.getGlobalBounds()) || gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().contains(coordinates);
+					flag = gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().intersects(hitboxnewpos.getGlobalBounds()) || gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().contains(coordinates);
+				}
 				if (flag) return i;
 			}
 		}

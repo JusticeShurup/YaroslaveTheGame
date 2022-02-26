@@ -1,12 +1,11 @@
 #ifndef _STATE_H_
 #define _STATE_H_
 #include <iostream>
-#include "SFML/Audio.hpp"
+#include "Sounds\\SoundContainer.h"
 
 class Entity;
 class Map;
 
-#include <SFML/Window.hpp>
 class State
 {
 protected: 

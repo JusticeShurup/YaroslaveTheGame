@@ -64,6 +64,9 @@ public:
 
 	void setDamageValue(int value); // set damage value
 	int getDamageValue(); // get damage value
+
+	void setIsInFight(bool flag);
+	bool isInFignt();
 	//Specifications
 
 	void setCanSwitchState(bool flag);
@@ -98,6 +101,9 @@ private:
 	float stam_per_tick;
 	int stam_per_attack;
 	bool can_lost_stam;
+
+	bool is_in_fight;
+	float in_fight_timer;
 
 	float speed;
 	int damage;

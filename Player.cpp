@@ -17,21 +17,41 @@ Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	: Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {
 	current_xp = 0;
 	level = 1;
+	damage_delivered = true;
 	setCanSwitchState(true);
 }
 
 void Player::update(sf::Event& event, float dt, Map* map) {
-	Entity::update(dt);
 	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	float speed = getSpeedValue();
 	float dx = 0;
 	float dy = 0;
-	bool is_walking = false;
-	bool is_running = false;
+
+	if (getState()->getName() == "Attack" && !damage_delivered) {
+		sf::Vector2i position; // attack range position
+		sf::Vector2i size(30, 30); // attack range size
+		std::string dir = getDirection();
+		if (dir == "North") position = sf::Vector2i(pos.x + getHitboxShape()->getSize().x / 2 - size.x / 2, pos.y + getHitboxShape()->getSize().y / 2 - size.y);
+		else if (dir == "East") position = sf::Vector2i(pos.x, pos.y + getHitboxShape()->getSize().y / 2 - size.y / 2);
+		else if (dir == "South") position = sf::Vector2i(pos.x + getHitboxShape()->getSize().x / 2 - size.x / 2, pos.y + size.y);
+		else position = sf::Vector2i(pos.x - size.x / 2, pos.y + getHitboxShape()->getSize().y / 2 - size.y / 2);
+
+		std::vector<Entity*> entity = map->getEntityInRange(sf::IntRect(position, size));
+		for (int i = 0; i < entity.size(); i++) {
+			entity[i]->setState(new HurtState(entity[i], getDamageValue(), getDirection(), map));
+			damage_delivered = true;
+		}
+	}
+
 
 	if (canSwitchState()) {
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && getStaminaValue() > getStamPerAttack() && canSwitchState()) {
+			damage_delivered = false;
+			setState(new AttackState(this));
+
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 				dy = speed * dt * (-500);
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && getStaminaValue() > 10) {
@@ -77,23 +97,6 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 				setDirection("East");
 			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && getStaminaValue() > getStamPerAttack() && canSwitchState()) {
-			setState(new AttackState(this));
-
-			sf::Vector2i position; // attack range position
-			sf::Vector2i size(25, 25); // attack range size
-			std::string dir = getDirection();
-			if (dir == "North") position = sf::Vector2i(pos.x - size.x / 2, pos.y - size.y);
-			else if (dir == "East") position = sf::Vector2i(pos.x, pos.y - size.y / 2);
-			else if (dir == "South") position = sf::Vector2i(pos.x - size.x / 2, pos.y);
-			else position = sf::Vector2i(pos.x - size.x, pos.y - size.y / 2);
-
-			std::vector<Entity*> entity = map->getEntityInRange(sf::IntRect(position, size));
-			for (int i = 0; i < entity.size(); i++) {
-				entity[i]->setState(new HurtState(entity[i], getDamageValue(), getDirection()));
-			}
-
-		}
 		else if (getState()->getName() != "Idle"){
 			setState(new IdleState(this));
 		}
@@ -115,6 +118,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 		}
 	}
 	setPosition(new_pos);
+	Entity::update(dt);
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {

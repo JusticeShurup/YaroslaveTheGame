@@ -7,6 +7,7 @@
 WalkState::WalkState(Entity* entity) : State(entity) {
 	name = "Walk";
 	add_stam_timer = 0;
+	sound_timer = 0;
 }
 
 void WalkState::update(float delta_time) {
@@ -14,19 +15,25 @@ void WalkState::update(float delta_time) {
 	sound_timer += delta_time;
 	sf::Vector2f pos = entity->getObjectPosition();
 	
+	if (sound_timer > 0.5) {
+		SoundContainer::getInstance()->getSoundByName(name)->play();
+		sound_timer = 0;
+	}
+
 	if (add_stam_timer > 0.2 && entity->getStaminaValue() + entity->getStamPerTick() < entity->getMaxStaminaValue()) {
 		entity->setStaminaValue(entity->getStaminaValue() + entity->getStamPerTick());
 		entity->updateStaminaBar();
 		add_stam_timer = 0;
 	}
 
-	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(pos.x + (entity->getDirection() == "East" ? 0.5 : -0.5), pos.y + 4 + (entity->getDirection() == "South" ? 0.25 : -0.25));
-	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(pos.x + (entity->getDirection() == "East" ? 0.5 : -0.5), pos.y + 2 + (entity->getDirection() == "South" ? 0.25 : -0.25));
+	if (entity->getStaminaBar()) entity->getStaminaBar()->setPosition(pos.x, pos.y + 4);
+	if (entity->getHealthBar()) entity->getHealthBar()->setPosition(pos.x, pos.y + 2);
 	entity->updateAnimator(delta_time, this);
 }
 
 void WalkState::update(float delta_time, Entity* target, Map* map) {
 	entity->update(delta_time);
+
 
 	float distance = entity->calcDistance(target->getObjectPosition() + target->getHitboxPosition());
 
@@ -99,7 +106,9 @@ void WalkState::update(float delta_time, Entity* target, Map* map) {
 	int distY = entity->getHitboxShape()->getSize().y + 1; // Расстояние, при котором враг уже сталкивается с объектом по Y
 
 	if (entity->calcDistance(pos) < distX && adjucentLeg > opposingLeg || entity->calcDistance(pos) < distY && opposingLeg > adjucentLeg) {
-		entity->setState(new AttackState(entity));
+		if (entity->getStaminaValue() >= entity->getStamPerAttack()) {
+			entity->setState(new AttackState(entity));
+		}
 		return;
 	}
 

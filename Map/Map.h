@@ -13,6 +13,8 @@ public:
 
 	void changeTilesetTexture(int x_pos, int y_pos, sf::Texture* new_texture);
 	
+	bool isEntity(GameObject* game_object);
+
 	void addGameObject(GameObject* game_object); // Add GameObject to array of GameObject to check collision and Ysort
 	void addEntity(Entity* entity); // Add Entity to array of Entity, also add to GameObject 
 
