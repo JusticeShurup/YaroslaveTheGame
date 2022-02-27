@@ -2,7 +2,7 @@
 #include <math.h>
 #include <thread>
 #include <iostream>
-#include "IdleState.h"
+#include "States/IdleState.h"
 
 Enemy::Enemy(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name) :
 	Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {

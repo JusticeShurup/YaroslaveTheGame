@@ -8,11 +8,16 @@
 #include "Player.h"
 #include "Camera.h"
 #include "Enemy.h"
+#include "Menu/MainMenu.h"
+
 
 class Game
 {
 public:
 	Game();
+
+	void setIsPaused(bool flag);
+	bool isPaused();
 
 	void run();
 	void update();
@@ -23,6 +28,7 @@ public:
 private:
 	sf::RenderWindow* window;
 	sf::Event event;
+	Menu* menu;
 	Camera* camera;
 	sf::ContextSettings settings;
 	Map* map;

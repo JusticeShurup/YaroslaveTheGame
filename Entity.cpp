@@ -2,7 +2,7 @@
 #include "TextureContainer/TextureContainer.h"
 #include <iostream>
 #include "Animator.h"
-#include "IdleState.h"
+#include "States/IdleState.h"
 
 int Entity::sign(float value) {
 	if (value > 0) return 1;

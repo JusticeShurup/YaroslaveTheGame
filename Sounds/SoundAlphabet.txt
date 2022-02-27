@@ -6,3 +6,7 @@ Attack 1
 Sounds\\punch.wav
 Hurt 1
 Sounds\\hurt.wav
+Hover 1
+Sounds\\hover.wav
+Active 1
+Sounds\\active.wav

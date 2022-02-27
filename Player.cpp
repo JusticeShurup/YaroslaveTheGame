@@ -1,11 +1,11 @@
 #include "Player.h"
 #include <iostream>
 #include "TextureContainer/TextureContainer.h"
-#include "IdleState.h"
-#include "RunState.h"
-#include "WalkState.h"
-#include "AttackState.h"
-#include "HurtState.h"
+#include "States/IdleState.h"
+#include "States/RunState.h"
+#include "States/WalkState.h"
+#include "States/AttackState.h"
+#include "States/HurtState.h"
 
 
 Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {

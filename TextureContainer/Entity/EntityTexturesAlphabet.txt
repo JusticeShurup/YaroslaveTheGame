@@ -92,3 +92,97 @@ NES_Slave NES_Slave_-_Toby_Orbon_Free_Files 5
   East 2 
    East\\Hurt_East_frame_0.png
    East\\Hurt_East_frame_1.png
+Tojic Tojic 5
+ Idle 4
+  North 4
+   North\\Idle_North_frame_0.png
+   North\\Idle_North_frame_1.png
+   North\\Idle_North_frame_2.png
+   North\\Idle_North_frame_3.png
+  South 4
+   South\\Idle_South_frame_0.png
+   South\\Idle_South_frame_1.png
+   South\\Idle_South_frame_2.png
+   South\\Idle_South_frame_3.png
+  West 4
+   West\\Idle_West_frame_0.png
+   West\\Idle_West_frame_1.png
+   West\\Idle_West_frame_2.png
+   West\\Idle_West_frame_3.png
+  East 4
+   East\\Idle_East_frame_0.png
+   East\\Idle_East_frame_1.png
+   East\\Idle_East_frame_2.png
+   East\\Idle_East_frame_3.png
+ Walk 4
+  North 4
+   North\\Walk_North_frame_0.png
+   North\\Walk_North_frame_1.png
+   North\\Walk_North_frame_2.png
+   North\\Walk_North_frame_3.png
+  South 4
+   South\\Walk_South_frame_0.png
+   South\\Walk_South_frame_1.png
+   South\\Walk_South_frame_2.png
+   South\\Walk_South_frame_3.png
+  West 4
+   West\\Walk_West_frame_0.png
+   West\\Walk_West_frame_1.png
+   West\\Walk_West_frame_2.png
+   West\\Walk_West_frame_3.png
+  East 4
+   East\\Walk_East_frame_0.png
+   East\\Walk_East_frame_1.png
+   East\\Walk_East_frame_2.png
+   East\\Walk_East_frame_3.png
+ Run 4
+  North 4 
+   North\\Run_North_frame_0.png
+   North\\Run_North_frame_1.png
+   North\\Run_North_frame_2.png
+   North\\Run_North_frame_3.png
+  South 4
+   South\\Run_South_frame_0.png
+   South\\Run_South_frame_1.png
+   South\\Run_South_frame_2.png
+   South\\Run_South_frame_3.png
+  West 4
+   West\\Run_West_frame_0.png
+   West\\Run_West_frame_1.png
+   West\\Run_West_frame_2.png
+   West\\Run_West_frame_3.png
+  East 4
+   East\\Run_East_frame_0.png
+   East\\Run_East_frame_1.png
+   East\\Run_East_frame_2.png
+   East\\Run_East_frame_3.png
+ Attack 4
+  North 3
+   North\\Attack_Pose_North_frame_0.png
+   North\\Attack_Pose_North_frame_1.png
+   North\\Attack_Pose_North_frame_2.png
+  South 3
+   South\\Attack_Pose_South_frame_0.png
+   South\\Attack_Pose_South_frame_1.png
+   South\\Attack_Pose_South_frame_2.png
+  West 3
+   West\\Attack_Pose_West_frame_0.png
+   West\\Attack_Pose_West_frame_1.png
+   West\\Attack_Pose_West_frame_2.png
+  East 3
+   East\\Attack_Pose_East_frame_0.png
+   East\\Attack_Pose_East_frame_1.png
+   East\\Attack_Pose_East_frame_2.png
+ Hurt 4
+  North 2 
+   North\\Hurt_North_frame_0.png
+   North\\Hurt_North_frame_1.png
+  South 2
+   South\\Hurt_South_frame_0.png
+   South\\Hurt_South_frame_1.png
+  West 2
+   West\\Hurt_West_frame_0.png
+   West\\Hurt_West_frame_1.png
+  East 2
+   East\\Hurt_East_frame_0.png
+   East\\Hurt_East_frame_1.png

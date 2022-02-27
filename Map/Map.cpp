@@ -164,7 +164,7 @@ int Map::returnCollisionWithMap(sf::Vector2f coordinates, GameObject* game_obj) 
 	sf::RectangleShape hitboxnewpos(game_obj->getHitboxShape()->getSize());
 	hitboxnewpos.setPosition(coordinates);
 	for (int i = 0; i < gameobject_map.size(); i++) {
-		if (!isEntity(game_obj)) {
+		if (!isEntity(gameobject_map[i])) {
 			for (int j = 0; j < gameobject_map[i]->getHitboxShapes()->size(); j++) {
 				if (gameobject_map[i] != game_obj) {
 					flag = gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().intersects(hitboxnewpos.getGlobalBounds()) || gameobject_map[i]->getHitboxShape(j)->getGlobalBounds().contains(coordinates);

@@ -43,6 +43,12 @@
     <Filter Include="Исходные файлы\Containers">
       <UniqueIdentifier>{1bd41bde-bf55-4b41-a8b2-d872321b6adf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Menu">
+      <UniqueIdentifier>{e02ce319-d2d7-4080-940a-0029ab96d919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Menu">
+      <UniqueIdentifier>{e79bab63-05a0-49b9-9b82-5c27e1c10206}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,24 +72,6 @@
     <ClCompile Include="Animator.cpp">
       <Filter>Исходные файлы\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Исходные файлы\States</Filter>
-    </ClCompile>
-    <ClCompile Include="WalkState.cpp">
-      <Filter>Исходные файлы\States</Filter>
-    </ClCompile>
-    <ClCompile Include="IdleState.cpp">
-      <Filter>Исходные файлы\States</Filter>
-    </ClCompile>
-    <ClCompile Include="RunState.cpp">
-      <Filter>Исходные файлы\States</Filter>
-    </ClCompile>
-    <ClCompile Include="AttackState.cpp">
-      <Filter>Исходные файлы\States</Filter>
-    </ClCompile>
-    <ClCompile Include="HurtState.cpp">
-      <Filter>Исходные файлы\States</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Исходные файлы\GameObjects</Filter>
     </ClCompile>
@@ -101,6 +89,33 @@
     </ClCompile>
     <ClCompile Include="Sounds\SoundContainer.cpp">
       <Filter>Исходные файлы\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="States\AttackState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\HurtState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\IdleState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\RunState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\WalkState.cpp">
+      <Filter>Исходные файлы\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu\Menu.cpp">
+      <Filter>Исходные файлы\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu\MainMenu.cpp">
+      <Filter>Исходные файлы\Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,24 +137,6 @@
     <ClInclude Include="Animator.h">
       <Filter>Файлы заголовков\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>Файлы заголовков\States</Filter>
-    </ClInclude>
-    <ClInclude Include="WalkState.h">
-      <Filter>Файлы заголовков\States</Filter>
-    </ClInclude>
-    <ClInclude Include="IdleState.h">
-      <Filter>Файлы заголовков\States</Filter>
-    </ClInclude>
-    <ClInclude Include="RunState.h">
-      <Filter>Файлы заголовков\States</Filter>
-    </ClInclude>
-    <ClInclude Include="AttackState.h">
-      <Filter>Файлы заголовков\States</Filter>
-    </ClInclude>
-    <ClInclude Include="HurtState.h">
-      <Filter>Файлы заголовков\States</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Файлы заголовков\GameObjects</Filter>
     </ClInclude>
@@ -157,6 +154,33 @@
     </ClInclude>
     <ClInclude Include="TextureContainer\TextureContainer.h">
       <Filter>Файлы заголовков\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="States\WalkState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\RunState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\IdleState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\HurtState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\AttackState.h">
+      <Filter>Файлы заголовков\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\Menu.h">
+      <Filter>Файлы заголовков\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\MainMenu.h">
+      <Filter>Файлы заголовков\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

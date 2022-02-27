@@ -1,7 +1,7 @@
 #include "Animator.h"
 #include "TextureContainer/TextureContainer.h"
 #include "Entity.h"
-#include "IdleState.h"
+#include "States/IdleState.h"
 #include <iostream>
 
 std::string states[5]{ "Idle", "Walk", "Run", "Attack", "Hurt" };

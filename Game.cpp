@@ -12,7 +12,8 @@ Game::Game() {
 	TextureContainer::getInstance(); 
 	SoundContainer::getInstance();
 	map = new Map("Map\\Map.txt", "Map\\GameObjectsMap.txt");
-
+	menu = new MainMenu(window);
+	is_active = true;
 
 	player = new Player(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 20, "Yaroslave");
 	player->setNewHitboxPosition(sf::Vector2f(4, 8));
@@ -20,7 +21,7 @@ Game::Game() {
 
 	map->addGameObject(player);
 
-	enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 10, "Churka"));
+	enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
 	enemies[0]->setPosition(8 * 32, 10 * 32);
 	enemies[0]->setNewHitboxPosition(sf::Vector2f(4, 8));
 	map->addEntity(enemies[0]);
@@ -30,6 +31,14 @@ Game::Game() {
 
 	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition());
 	window->setView(*camera->getView());
+}
+
+void Game::setIsPaused(bool flag) {
+	is_paused = flag;
+}
+
+bool Game::isPaused() {
+	return is_paused;
 }
 
 void Game::run() {
@@ -56,38 +65,48 @@ void Game::update() {
 		}
 		if (event.type == sf::Event::KeyReleased) {
 			if (event.key.code == sf::Keyboard::Escape) {
-				is_paused = !is_paused;
+				menu->setActive(!menu->isActive());
 			}
 		}
 	}
 
-	player->update(event, delta_time, map);
-	for (int i = 0; i < enemies.size(); i++) enemies[i]->update(delta_time, player, map);
+	if (is_active && !menu->isActive()) {
+		player->update(event, delta_time, map);
+		for (int i = 0; i < enemies.size(); i++) enemies[i]->update(delta_time, player, map);
 
-	if (enemies.size() == 0) {
-		enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 10, "Churka"));
-		enemies[0]->setPosition(8 * 32, 10 * 32);
-		enemies[0]->setNewHitboxPosition(sf::Vector2f(4, 8));
-		map->addEntity(enemies[0]);
-		enemies[0]->setGame(this);
+		if (enemies.size() == 0) {
+			enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
+			enemies[0]->setPosition(8 * 32, 10 * 32);
+			enemies[0]->setNewHitboxPosition(sf::Vector2f(4, 8));
+			map->addEntity(enemies[0]);
+			enemies[0]->setGame(this);
 
-		enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 10, "Churka"));
-		enemies[1]->setPosition(8 * 32, 5 * 32);
-		enemies[1]->setNewHitboxPosition(sf::Vector2f(4, 8));
-		map->addEntity(enemies[1]);
-		enemies[1]->setGame(this);
+			enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
+			enemies[1]->setPosition(8 * 32, 5 * 32);
+			enemies[1]->setNewHitboxPosition(sf::Vector2f(4, 8));
+			map->addEntity(enemies[1]);
+			enemies[1]->setGame(this);
+		}
+
+		map->update(player);
+		camera->update(sf::Vector2f(player->getObjectPosition().x + player->getGlobalBounds().width / 2,
+					   player->getObjectPosition().y + player->getGlobalBounds().height / 2), map);
+
+		window->setView(*camera->getView());
 	}
-
-	map->update(player);
-	camera->update(sf::Vector2f(player->getObjectPosition().x + player->getGlobalBounds().width / 2,
-				   player->getObjectPosition().y + player->getGlobalBounds().height / 2), map);
-
-	window->setView(*camera->getView());
+	else if (menu->isActive()) {
+		menu->update(event, camera);
+	}
 }
 
 void Game::render() {
 	window->clear();
-	window->draw(*map);
+	if (!menu->isActive()) {
+		window->draw(*map);
+	}
+	else {
+		window->draw(*menu);
+	}
 	window->display();
 }
 
