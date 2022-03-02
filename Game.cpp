@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Sounds/SoundContainer.h"
+#include <typeinfo>
 
 Game::Game() {
 	settings.antialiasingLevel = 10;
@@ -12,7 +13,7 @@ Game::Game() {
 	TextureContainer::getInstance(); 
 	SoundContainer::getInstance();
 	map = new Map("Map\\Map.txt", "Map\\GameObjectsMap.txt");
-	menu = new MainMenu(window);
+	menu = new MainMenu(window, this);
 	is_active = true;
 
 	player = new Player(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 20, "Yaroslave");
@@ -41,6 +42,11 @@ bool Game::isPaused() {
 	return is_paused;
 }
 
+void Game::setMenu(Menu* menu) {
+	delete this->menu;
+	this->menu = menu;
+}
+
 void Game::run() {
 	is_running = true;
 	while (is_running) {
@@ -64,8 +70,9 @@ void Game::update() {
 			is_active = true;
 		}
 		if (event.type == sf::Event::KeyReleased) {
-			if (event.key.code == sf::Keyboard::Escape) {
+			if (event.key.code == sf::Keyboard::Escape && typeid(*menu) != typeid(MainMenu) ) {
 				menu->setActive(!menu->isActive());
+				menu->update(event, camera, delta_time);
 			}
 		}
 	}
@@ -95,18 +102,14 @@ void Game::update() {
 		window->setView(*camera->getView());
 	}
 	else if (menu->isActive()) {
-		menu->update(event, camera);
+		menu->update(event, camera, delta_time);
 	}
 }
 
 void Game::render() {
 	window->clear();
-	if (!menu->isActive()) {
-		window->draw(*map);
-	}
-	else {
-		window->draw(*menu);
-	}
+	window->draw(*map);
+	if(menu->isActive())window->draw(*menu);
 	window->display();
 }
 

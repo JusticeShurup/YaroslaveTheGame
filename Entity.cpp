@@ -281,10 +281,14 @@ void Entity::update(float delta_time) {
 		in_fight_timer = 0;
 	}
 
-	if (add_hp_timer >= add_hp_time && health_points < 100) {
+	if (add_hp_timer >= add_hp_time && health_points + 1 * (is_in_fight ? 1 : 10) <= 100) {
 
 		add_hp_timer = 0;
 		health_points += 1 * (is_in_fight ? 1 : 10);
+		updateHealthBar();
+	}
+	else if (add_hp_timer > add_hp_time){
+		health_points = max_health_points;
 		updateHealthBar();
 	}
 

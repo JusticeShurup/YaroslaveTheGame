@@ -10,7 +10,6 @@
 #include "Enemy.h"
 #include "Menu/MainMenu.h"
 
-
 class Game
 {
 public:
@@ -18,6 +17,8 @@ public:
 
 	void setIsPaused(bool flag);
 	bool isPaused();
+
+	void setMenu(Menu* menu);
 
 	void run();
 	void update();

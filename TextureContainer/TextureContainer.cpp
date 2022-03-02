@@ -128,6 +128,23 @@ TextureContainer::TextureContainer() {
 	}
 	file.close();
 	//Textures for Entity
+
+	//Textures for Menu
+	file.open("TextureContainer\\Menu\\MenuTexturesAlphabet.txt");
+	while (!file.eof()) {
+		std::string cathegory; 
+		int size;
+		file >> cathegory >> size;
+		for (int i = 0; i < size; i++) {
+			std::string filename;
+			file >> filename;
+			sf::Texture* texture = new sf::Texture;
+			texture->loadFromFile(filename);
+			pause_menu_textures.push_back(texture);
+		}
+	}
+	file.close();
+	//Textures for Menu
 }
 
 
@@ -287,6 +304,22 @@ int TextureContainer::getAnimationSize(std::string name, std::string state, std:
 	return entity_textures[name][state][direction].size();
 }
 //Entity
+
+//Menu
+
+std::vector<sf::Texture*> TextureContainer::getPauseMenuTextures() {
+	return pause_menu_textures;
+}
+
+sf::Texture* TextureContainer::getPauseMenuTexture(int number) {
+	if (number < 0 || number >= pause_menu_textures.size()) {
+		number = 0;
+	}
+
+	return pause_menu_textures[number];
+}
+
+//Menu
 
 TextureContainer* TextureContainer::getInstance() {
 	if (!TextureContainer::instance) {

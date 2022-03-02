@@ -1,7 +1,7 @@
 #include "MainMenu.h"
+#include "../Game.h"
 
-
-MainMenu::MainMenu(sf::RenderWindow* window) : Menu(window) {
+MainMenu::MainMenu(sf::RenderWindow* window, Game* game) : Menu(window, game) {
 	buttons.push_back(new Button(400, 100, 200, 300, "Play"));
 	buttons[0]->setShapeColor("idle", sf::Color::White);
 	buttons[0]->setShapeColor("hover", sf::Color(128, 128, 128, 255));
@@ -20,26 +20,30 @@ MainMenu::~MainMenu() {
 	for (int i = 0; i < buttons.size(); i++) delete buttons[i];
 }
 
-void MainMenu::update(sf::Event& event, Camera* camera) {
-	if (camera->getView()->getSize().x == getWindow()->getSize().x && camera->getView()->getSize().y == getWindow()->getSize().y) is_camera_switched = true;
-	else is_camera_switched = false;
+void MainMenu::update(sf::Event& event, Camera* camera, float delta_time) {
+	if (isActive()) {
+		if (camera->getView()->getSize().x == getWindow()->getSize().x && camera->getView()->getSize().y == getWindow()->getSize().y) is_camera_switched = true;
+		else is_camera_switched = false;
 
-	if (!is_camera_switched){
-		camera->getView()->setSize(sf::Vector2f(getWindow()->getSize()));
-		camera->getView()->setCenter(getWindow()->getSize().x / 2, getWindow()->getSize().y / 2);
-		getWindow()->setView(*camera->getView());
-		is_camera_switched = true;
-	}
-	sf::Vector2f mouse_pos = getWindow()->mapPixelToCoords(sf::Mouse::getPosition());
+		if (!is_camera_switched) {
+			camera->getView()->setSize(sf::Vector2f(getWindow()->getSize()));
+			camera->getView()->setCenter(getWindow()->getSize().x / 2, getWindow()->getSize().y / 2);
+			getWindow()->setView(*camera->getView());
+			is_camera_switched = true;
+		}
+		sf::Vector2f mouse_pos = getWindow()->mapPixelToCoords(sf::Mouse::getPosition());
 
-	for (int i = 0; i < buttons.size(); i++) buttons[i]->update(mouse_pos, event);
+		for (int i = 0; i < buttons.size(); i++) buttons[i]->update(mouse_pos, event);
 
-	if (buttons[0]->isClicked()) {
-		camera->getView()->setSize(sf::Vector2f(300, 300));
-		setActive(false);
-	}
-	else if (buttons[1]->isClicked()) {
-		getWindow()->close();
+		if (buttons[0]->isClicked()) {
+			camera->getView()->setSize(sf::Vector2f(300, 300));
+			getWindow()->setView(*camera->getView());
+			setActive(false);
+			getGame()->setMenu(new PauseMenu(getWindow(), getGame()));
+		}
+		else if (buttons[1]->isClicked()) {
+			getWindow()->close();
+		}
 	}
 }
 

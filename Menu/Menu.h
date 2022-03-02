@@ -2,23 +2,26 @@
 #define _MENU_H_
 #include "../Button.h"
 #include "../Camera.h"
+class Game;
 
 class Menu : public sf::Drawable
 {
 public: 
-	Menu(sf::RenderWindow* window);
+	Menu(sf::RenderWindow* window, Game* game);
 
-	void setActive(bool flag);
+	virtual void setActive(bool flag);
 	bool isActive();
+
+	Game* getGame() const;
 
 	sf::RenderWindow* getWindow();
 
-	virtual void update(sf::Event& event, Camera* camera) = 0;
+	virtual void update(sf::Event& event, Camera* camera, float delta_time) = 0;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 private: 
 	bool is_active;
 	
 	sf::RenderWindow* window;
-
+	Game* game;
 };
 #endif

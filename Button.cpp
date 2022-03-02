@@ -23,7 +23,7 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 	text.setFillColor(Color::Black);
 	text.setString(name);
 	text.setPosition(shape.getPosition().x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-		shape.getPosition().y);
+				     shape.getPosition().y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 
 	canPlaySound = true;
 	shape_is_hide = false;
@@ -45,7 +45,7 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 	text.setFillColor(Color::Black);
 	text.setString(name);
 	text.setPosition(shape.getPosition().x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-		shape.getPosition().y);
+					 shape.getPosition().y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 
 	buffer.loadFromFile("Sounds/menu_item_howered.wav");
 	sound.setBuffer(buffer);
@@ -67,7 +67,7 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 	text.setFillColor(Color::Black);
 	text.setString(name);
 	text.setPosition(shape.getPosition().x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-		shape.getPosition().y);
+					 shape.getPosition().y + text.getGlobalBounds().height / 2);
 }
 
 bool Button::isClicked() {
@@ -79,14 +79,15 @@ bool Button::isClicked() {
 
 void Button::setPosition(float x, float y) {
 	shape.setPosition(x, y);
-	text.setPosition(x + (shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2), y);
+	text.setPosition(x + (shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2),
+					 y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 
 }
 
 void Button::setPosition(sf::Vector2f position) {
 	shape.setPosition(position);
 	text.setPosition(position.x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-		position.y);
+					 position.y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 }
 
 void Button::setTextColor(std::string sost, sf::Color color) {

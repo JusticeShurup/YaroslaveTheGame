@@ -117,6 +117,9 @@
     <ClCompile Include="Menu\MainMenu.cpp">
       <Filter>Исходные файлы\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Menu\PauseMenu.cpp">
+      <Filter>Исходные файлы\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -180,6 +183,9 @@
       <Filter>Файлы заголовков\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Menu\MainMenu.h">
+      <Filter>Файлы заголовков\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\PauseMenu.h">
       <Filter>Файлы заголовков\Menu</Filter>
     </ClInclude>
   </ItemGroup>

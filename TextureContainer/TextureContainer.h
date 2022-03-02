@@ -50,6 +50,12 @@ public:
 	int getAnimationSize(std::string textures_name, std::string state, std::string direction); // Return quantity of textures in direction 
 	//Entity
 
+	//Menu
+	std::vector<sf::Texture*> getPauseMenuTextures();
+	sf::Texture* getPauseMenuTexture(int number);
+	//Menu
+
+
 private: 
 	TextureContainer();
 
@@ -89,6 +95,10 @@ private:
 	//Entity
 	std::map<std::string, std::map<std::string, std::map<std::string, std::vector<sf::Texture*>>>> entity_textures; // Textures_name -> State -> Direction -> Frame
 	//Entity
+
+	//Menu
+	std::vector<sf::Texture*> pause_menu_textures;
+	//Menu
 
 	static TextureContainer* instance;
 };
