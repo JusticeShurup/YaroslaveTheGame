@@ -3,6 +3,7 @@
 #include <thread>
 #include <iostream>
 #include "States/IdleState.h"
+#include "Game.h"
 
 Enemy::Enemy(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name) :
 	Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {
@@ -17,6 +18,10 @@ Enemy::Enemy(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string tex
 
 	setState(new IdleState(this));
 
+}
+
+Enemy::~Enemy() {
+	game->getPlayer()->addXP(2);
 }
 
 void Enemy::update(float delta_time, Entity* target, Map* map) {

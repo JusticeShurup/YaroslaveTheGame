@@ -103,6 +103,10 @@ void Game::setIsRunning(bool flag) {
 	is_running = flag;
 }
 
+Player* Game::getPlayer() {
+	return player;
+}
+
 void Game::run() {
 	is_running = true;
 	while (is_running) {

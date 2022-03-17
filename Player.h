@@ -1,6 +1,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 #include "Entity.h"
+
 class Player : public Entity
 {
 public: 
@@ -9,6 +10,8 @@ public:
 
 	void lockNearestTarget(Map* map);
 	void update(sf::Event& event, float delta_time, Map* map);
+	void addXP(int xp);
+
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
@@ -20,6 +23,7 @@ private:
 
 	int level;
 	int current_xp;
+	int xp_to_nextlevel;
 
 	bool damage_delivered;
 };

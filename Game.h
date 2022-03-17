@@ -25,6 +25,8 @@ public:
 
 	void setIsRunning(bool flag);
 
+	Player* getPlayer();
+
 	void run();
 	void update();
 	void render();

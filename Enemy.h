@@ -5,6 +5,7 @@ class Enemy : public Entity
 {
 public: 
 	Enemy(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name);
+	~Enemy();
 
 	void update(float delta_time, Entity* target, Map* map);
 

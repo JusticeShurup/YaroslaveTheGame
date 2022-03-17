@@ -12,6 +12,7 @@ Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 	current_xp = 0;
 	level = 1;
 	target_lock_timer = 0;
+	xp_to_nextlevel = 10;
 	damage_delivered = false;
 	entity_target = nullptr;
 	target = nullptr;
@@ -22,6 +23,7 @@ Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	: Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {
 	current_xp = 0;
 	level = 1;
+	xp_to_nextlevel = 10;
 	target_lock_timer = 0;
 	damage_delivered = false;
 	entity_target = nullptr;
@@ -55,6 +57,7 @@ void Player::lockNearestTarget(Map* map) {
 }
 
 void Player::update(sf::Event& event, float dt, Map* map) {
+
 	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	float speed = getSpeedValue();
 	float dx = 0;
@@ -83,8 +86,8 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && getStaminaValue() > getStamPerAttack() && canSwitchState()) {
 			damage_delivered = false;
 			setState(new AttackState(this));
-
 		}
+
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 				dy = speed * dt * (-500);
@@ -174,9 +177,21 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 			new_pos.x += dx;
 		}
 	}
+
 	setPosition(new_pos);
 	Entity::update(dt);
 }
+
+void Player::addXP(int xp) {
+	this->current_xp += xp;
+	if (current_xp >= xp_to_nextlevel) {
+		current_xp %= xp;
+		level++;
+		xp_to_nextlevel = 10 * level;
+	}
+	std::cout << level << " " << current_xp << " " << xp_to_nextlevel << std::endl;
+}
+
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	Entity::draw(target, states);
