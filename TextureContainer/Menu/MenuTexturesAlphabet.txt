@@ -4,3 +4,5 @@ TextureContainer\\Menu\\PauseMenu\\ResumeButtonIdle.png
 TextureContainer\\Menu\\PauseMenu\\ResumeButtonHover.png
 TextureContainer\\Menu\\PauseMenu\\ExitButtonIdle.png
 TextureContainer\\Menu\\PauseMenu\\ExitButtonHover.png
+MainMenu 1 
+TextureContainer\\Menu\\MainMenu\\MainMenu.png

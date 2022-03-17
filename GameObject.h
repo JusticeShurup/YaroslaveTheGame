@@ -19,6 +19,7 @@ public:
 	sf::RectangleShape* getHitboxShape(); // Return the 1-st hitbox 
 	sf::RectangleShape* getHitboxShape(int number); // Return the definite hitbox, if gameobject has only one hitbox, return him
 	std::vector<sf::RectangleShape>* getHitboxShapes();
+
 	int getHitboxCount();
 
 	void setPosition(sf::Vector2f object_position);
@@ -30,6 +31,7 @@ public:
 	sf::Vector2f getHitboxPosition();
 	sf::Vector2f getHitboxPosition(int number);
 	std::vector<sf::Vector2f> getHitboxPositions();
+	sf::Vector2f getCenter() const; // Works only for GameObjects with only 1 hitbox
 
 	void showObjectOutlines();
 	void showHitboxOutlines();

@@ -15,6 +15,8 @@ public:
 
 private:
 	bool is_background_in_pos;
+	bool is_in_starty;
+	bool can_close;
 	sf::RectangleShape background;
 
 	std::vector<sf::RectangleShape*> buttons;

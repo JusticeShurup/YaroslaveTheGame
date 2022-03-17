@@ -51,8 +51,13 @@ public:
 	//Entity
 
 	//Menu
+	
+	std::vector<sf::Texture*> getMainMenuTextures();
 	std::vector<sf::Texture*> getPauseMenuTextures();
+
+	sf::Texture* getMainMenuTexture(int number);
 	sf::Texture* getPauseMenuTexture(int number);
+
 	//Menu
 
 
@@ -97,7 +102,7 @@ private:
 	//Entity
 
 	//Menu
-	std::vector<sf::Texture*> pause_menu_textures;
+	std::map<std::string, std::vector<sf::Texture*>> menu_textures;
 	//Menu
 
 	static TextureContainer* instance;

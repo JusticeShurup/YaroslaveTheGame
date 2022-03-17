@@ -143,6 +143,10 @@ std::vector<sf::Vector2f> GameObject::getHitboxPositions() {
 	return hitbox_delta_positions;
 }
 
+sf::Vector2f GameObject::getCenter() const{
+	return sf::Vector2f(hitboxes[0].getPosition().x + hitboxes[0].getSize().x / 2, hitboxes[0].getPosition().y + hitboxes[0].getSize().y / 2);
+}
+
 void GameObject::showObjectOutlines() {
 	if (round(object->getOutlineThickness()) == 0)
 		object->setOutlineThickness(3);

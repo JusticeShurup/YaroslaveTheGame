@@ -13,7 +13,7 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private: 
 	bool is_camera_switched;
-	sf::RectangleShape* background;
+	sf::RectangleShape* background[2];
 	sf::Text title;
 
 	std::vector<Button*> buttons;

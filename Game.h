@@ -14,11 +14,16 @@ class Game
 {
 public:
 	Game();
+	~Game();
 
 	void setIsPaused(bool flag);
 	bool isPaused();
 
+	void restartGame();
+
 	void setMenu(Menu* menu);
+
+	void setIsRunning(bool flag);
 
 	void run();
 	void update();
@@ -36,6 +41,10 @@ private:
 
 	sf::Clock clock;
 	float delta_time;
+	
+	float gameover_timer;
+	bool is_gameover;
+
 
 	bool is_running;
 	bool is_paused;
@@ -43,5 +52,8 @@ private:
 
 	Player* player;
 	std::vector<Enemy*> enemies;
+
+	sf::Text gameover_text;
+
 };
 #endif

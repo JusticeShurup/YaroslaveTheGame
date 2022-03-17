@@ -11,14 +11,47 @@
 Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 	current_xp = 0;
 	level = 1;
+	target_lock_timer = 0;
+	damage_delivered = false;
+	entity_target = nullptr;
+	target = nullptr;
+
 }
 
 Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name)
 	: Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {
 	current_xp = 0;
 	level = 1;
-	damage_delivered = true;
+	target_lock_timer = 0;
+	damage_delivered = false;
+	entity_target = nullptr;
+	target = nullptr;
+
 	setCanSwitchState(true);
+}
+
+void Player::lockNearestTarget(Map* map) {
+	std::vector<Entity*> entity;
+	entity = map->getEntity();
+	float distance = 1000000;
+	int target_number = 0;
+	for (int i = 0; i < entity.size(); i++) {
+		if (this != entity[i]) {
+			if (calcDistance(entity[i]->getCenter(), getCenter()) < distance && calcDistance(entity[i]->getCenter(), getCenter()) <= 300) {
+				distance = calcDistance(entity[i]->getCenter(), getCenter());
+				target_number = i;
+			}
+		}
+	}
+		
+	if (distance <= 300) {
+		target = new sf::RectangleShape(sf::Vector2f(entity[target_number]->getObjectShape()->getSize().x + 1, entity[target_number]->getObjectShape()->getSize().y + 1));
+		target->setFillColor(sf::Color(255, 255, 255, 0));
+		target->setOutlineColor(sf::Color::Red);
+		target->setOutlineThickness(1);
+		target->setPosition(entity[target_number]->getObjectPosition().x - 1, entity[target_number]->getObjectPosition().y - 1);
+		entity_target = entity[target_number];
+	}
 }
 
 void Player::update(sf::Event& event, float dt, Map* map) {
@@ -26,6 +59,7 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 	float speed = getSpeedValue();
 	float dx = 0;
 	float dy = 0;
+	target_lock_timer += dt;
 
 	if (getState()->getName() == "Attack" && !damage_delivered) {
 		sf::Vector2i position; // attack range position
@@ -102,6 +136,29 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 		}
 	}
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && target_lock_timer > 0.2) {
+		if (!target) {
+			lockNearestTarget(map);
+		}
+		else {
+			delete target;
+			target = nullptr;
+			entity_target = nullptr;
+		}
+		target_lock_timer = 0;
+	}
+
+
+	if (map->isEntity(entity_target)) {
+		target->setPosition(entity_target->getObjectPosition().x - 1, entity_target->getObjectPosition().y - 1);
+	}
+	else {
+		entity_target = nullptr;
+		if (target) {
+			delete target;
+			target = nullptr;
+		}
+	}
 
 	float mapEndX = map->getSize().x * map->getTilesetSize().x;
 	float mapEndY = map->getSize().y * map->getTilesetSize().y;
@@ -123,4 +180,33 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	Entity::draw(target, states);
+	if (this->target) {
+		target.draw(*this->target);
+	}
+}
+
+void Player::setDirection(std::string dir) {
+
+	if (!target && !entity_target) { // Если нет цели для атаки
+		Entity::setDirection(dir);
+	}
+	else { // Если есть цель для атаки
+		float X = getObjectPosition().x + getHitboxPosition().x; // Координата X - от левого верхнего угла хитбокса
+		float Y = getObjectPosition().y + getHitboxPosition().y; // Координата Y - от левого верхнего угла хитбокса
+		float targetX = entity_target->getObjectShape()->getPosition().x + entity_target->getHitboxPosition().x;
+		float targetY = entity_target->getObjectShape()->getPosition().y + entity_target->getHitboxPosition().y;
+
+
+		float adjucentLeg = abs(targetX - X); // Прилежащий катет
+		float opposingLeg = abs(targetY - Y); // Противолежащий катет
+
+		if (opposingLeg > adjucentLeg) { // Если по Y идти больше чем X, то 
+			if (targetY - Y > 0) Entity::setDirection("South"); //Идёт вниз 
+			else Entity::setDirection("North"); //Идёт вверх
+		}
+		else {
+			if (targetX - X > 0) Entity::setDirection("East"); //Идёт вправо
+			else Entity::setDirection("West"); //Идёт вверх
+		}
+	}
 }

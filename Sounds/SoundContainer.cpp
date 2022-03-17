@@ -1,5 +1,6 @@
 #include "SoundContainer.h"
 #include <fstream>
+#include <iostream>
 
 SoundContainer* SoundContainer::instance = nullptr;
 
@@ -11,9 +12,6 @@ SoundContainer::SoundContainer() {
 		int size;
 
 		file >> cathegory;
-		if (cathegory == "\0") {
-			break;
-		}
 		file >> size;
 
 		for (int i = 0; i < size; i++) {
@@ -31,6 +29,28 @@ SoundContainer::SoundContainer() {
 			soundAlphabet[cathegory] = sound;
 		}
 	}
+	file.close();
+
+	file.open("Sounds\\MenuMusic.txt");
+
+	while (!file.eof()) {
+		std::string cathergory;
+		int size;
+		file >> cathergory >> size;
+		for (int i = 0; i < size; i++) {
+			std::string music_name;
+			std::string music_filename;
+			file >> music_name >> music_filename;
+			sf::Music* music = new sf::Music;
+			music->setVolume(50);
+			if (!music->openFromFile(music_filename)) std::cout << "skip " << music_name << std::endl;
+			menu_music.emplace_back(music);
+		}
+
+	}
+
+	file.close();
+
 }
 
 sf::Sound* SoundContainer::getSoundByName(std::string name) {
@@ -43,6 +63,10 @@ std::vector<sf::SoundBuffer*> SoundContainer::getBuffers() {
 
 std::vector<sf::Sound*> SoundContainer::getSounds() {
 	return sounds;
+}
+
+std::vector<sf::Music*> SoundContainer::getMenuMusic() {
+	return menu_music;
 }
 
 SoundContainer* SoundContainer::getInstance() {

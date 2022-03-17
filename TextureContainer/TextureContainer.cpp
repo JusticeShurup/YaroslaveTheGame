@@ -135,13 +135,15 @@ TextureContainer::TextureContainer() {
 		std::string cathegory; 
 		int size;
 		file >> cathegory >> size;
+		std::vector<sf::Texture*> textures;
 		for (int i = 0; i < size; i++) {
 			std::string filename;
 			file >> filename;
 			sf::Texture* texture = new sf::Texture;
 			texture->loadFromFile(filename);
-			pause_menu_textures.push_back(texture);
+			textures.push_back(texture);
 		}
+		menu_textures.emplace(cathegory, textures);
 	}
 	file.close();
 	//Textures for Menu
@@ -307,16 +309,28 @@ int TextureContainer::getAnimationSize(std::string name, std::string state, std:
 
 //Menu
 
-std::vector<sf::Texture*> TextureContainer::getPauseMenuTextures() {
-	return pause_menu_textures;
+std::vector<sf::Texture*> TextureContainer::getMainMenuTextures() {
+	return menu_textures["MainMenu"];
 }
 
-sf::Texture* TextureContainer::getPauseMenuTexture(int number) {
-	if (number < 0 || number >= pause_menu_textures.size()) {
+std::vector<sf::Texture*> TextureContainer::getPauseMenuTextures() {
+	return menu_textures["PauseMenu"];
+}
+
+sf::Texture* TextureContainer::getMainMenuTexture(int number) {
+	if (number < 0 || number >= menu_textures["MainMenu"].size()) {
 		number = 0;
 	}
 
-	return pause_menu_textures[number];
+	return menu_textures["MainMenu"][number];
+}
+
+sf::Texture* TextureContainer::getPauseMenuTexture(int number) {
+	if (number < 0 || number >= menu_textures["PauseMenu"].size()) {
+		number = 0;
+	}
+
+	return menu_textures["PauseMenu"][number];
 }
 
 //Menu

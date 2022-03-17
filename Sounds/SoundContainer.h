@@ -13,15 +13,16 @@ public:
 
 	std::vector<sf::SoundBuffer*> getBuffers();
 	std::vector<sf::Sound*> getSounds();
+	std::vector<sf::Music*> getMenuMusic();
 
 private:
 	SoundContainer();
 
 	std::vector<sf::SoundBuffer*> buffers;
 	std::vector<sf::Sound*> sounds;
+	std::vector<sf::Music*> menu_music;
 
 	std::map<std::string, sf::Sound*> soundAlphabet;
-	
 	static SoundContainer* instance;
 };
 #endif
