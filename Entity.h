@@ -23,7 +23,7 @@ public:
 	int sign(float value);
 
 	void setGame(Game* game);
-	Game* getGame();
+	Game* getGame() const;
 
 	sf::Text* getNickname();
 
@@ -35,8 +35,6 @@ public:
 	void setName(std::string name);
 	std::string getName() const;
 
-
-	sf::FloatRect getGlobalBounds();
 	void setTexturesName(std::string textures_name);
 	std::string getTexturesName();
 

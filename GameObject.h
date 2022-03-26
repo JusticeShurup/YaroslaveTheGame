@@ -27,7 +27,9 @@ public:
 	void setNewHitboxPosition(sf::Vector2f hitbox_position); // Set position of hitbox relative to object
 	void setNewHitboxPositions(std::vector<sf::Vector2f> hitbox_positions); // Set positions of hitboxes relative to object
 
-	sf::Vector2f getObjectPosition();
+	sf::FloatRect getGlobalBounds() const;
+
+	sf::Vector2f getObjectPosition() const;
 	sf::Vector2f getHitboxPosition();
 	sf::Vector2f getHitboxPosition(int number);
 	std::vector<sf::Vector2f> getHitboxPositions();

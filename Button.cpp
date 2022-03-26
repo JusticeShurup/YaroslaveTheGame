@@ -32,8 +32,19 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 Button::Button(float widht, float height, float posX, float posY, std::string name, bool hide_shape)
 	: widht(widht), height(height), posX(posX), posY(posY), buttonText(name)
 {
-
 	textIdleColor = sf::Color::Black;
+	textHoverColor = sf::Color::White;
+	textActiveColor = sf::Color::White;
+
+	shapeIdleColor = sf::Color::White;
+	shapeHoverColor = sf::Color(127, 127, 127, 255);
+	shapeActiveColor = sf::Color(127, 127, 127, 255);
+	
+	shapeOutlineIdleColor = sf::Color::Black;
+	shapeOutlineHoverColor = sf::Color(127, 127, 127, 255);
+	shapeOutlineActiveColor = sf::Color(127, 127, 127, 255);
+	
+
 
 	state = BTN_IDLE;
 	shape = RectangleShape(Vector2f(widht, height));
@@ -56,6 +67,18 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 Button::Button(float widht, float height, float posX, float posY, std::string name, unsigned int letters_size)
 	: widht(widht), height(height), posX(posX), posY(posY), buttonText(name)
 {
+	textIdleColor = sf::Color::Black;
+	textHoverColor = sf::Color::White;
+	textActiveColor = sf::Color::White;
+
+	shapeIdleColor = sf::Color::White;
+	shapeHoverColor = sf::Color(127, 127, 127, 255);
+	shapeActiveColor = sf::Color(127, 127, 127, 255);
+
+	shapeOutlineIdleColor = sf::Color::Black;
+	shapeOutlineHoverColor = sf::Color(127, 127, 127, 255);
+	shapeOutlineActiveColor = sf::Color(127, 127, 127, 255);
+
 
 	state = BTN_IDLE;
 	shape = RectangleShape(Vector2f(widht, height));
@@ -75,6 +98,14 @@ bool Button::isClicked() {
 		return true;
 	}
 	else return false;
+}
+
+void Button::hideShape(bool flag) {
+	shape_is_hide = flag;
+}
+
+bool Button::isShapeHidden() const {
+	return shape_is_hide;
 }
 
 void Button::setPosition(float x, float y) {
@@ -102,6 +133,12 @@ void Button::setShapeColor(std::string sost, sf::Color color) {
 	else if (sost == "active") shapeActiveColor = color;
 }
 
+void Button::setOutlineShapeColor(std::string sost, sf::Color color) {
+	if (sost == "idle") shapeOutlineIdleColor = color;
+	else if (sost == "hover") shapeOutlineHoverColor = color;
+	else if (sost == "active") shapeOutlineActiveColor = color;
+}
+
 sf::RectangleShape* Button::getShape() {
 	return &shape;
 }
@@ -113,6 +150,7 @@ sf::Text* Button::getText() {
 void Button::update(Vector2f pos, Event& event) {
 	state = BTN_IDLE;
 	//Hover
+
 	if (shape.getGlobalBounds().contains(pos) || text.getGlobalBounds().contains(pos))
 	{
 		state = BTN_HOVER;

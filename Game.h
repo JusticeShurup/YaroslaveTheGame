@@ -26,6 +26,8 @@ public:
 	void setIsRunning(bool flag);
 
 	Player* getPlayer();
+	Camera* getCamera();
+
 
 	void run();
 	void update();
@@ -53,6 +55,8 @@ private:
 	bool is_active;
 
 	Player* player;
+	GUI* gui;
+
 	std::vector<Enemy*> enemies;
 
 	sf::Text gameover_text;

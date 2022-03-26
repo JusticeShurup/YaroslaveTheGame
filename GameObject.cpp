@@ -127,7 +127,11 @@ void GameObject::setNewHitboxPositions(std::vector<sf::Vector2f> hitbox_position
 	}
 }
 
-sf::Vector2f GameObject::getObjectPosition() {
+sf::FloatRect GameObject::getGlobalBounds() const{
+	return object->getGlobalBounds();
+}
+
+sf::Vector2f GameObject::getObjectPosition() const{
 	return object->getPosition();
 }
 

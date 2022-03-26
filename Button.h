@@ -20,11 +20,15 @@ public:
 
 
 	bool isClicked();
+	void hideShape(bool flag);
+	bool isShapeHidden() const;
+
 	void setPosition(float x, float y);
 	void setPosition(sf::Vector2f postion);
 
 	void setTextColor(std::string sost, sf::Color color);
 	void setShapeColor(std::string sost, sf::Color color);
+	void setOutlineShapeColor(std::string sost, sf::Color color);
 
 	sf::RectangleShape* getShape();
 	sf::Text* getText();
@@ -50,6 +54,10 @@ private:
 	sf::Color shapeIdleColor;
 	sf::Color shapeHoverColor;
 	sf::Color shapeActiveColor;
+
+	sf::Color shapeOutlineIdleColor;
+	sf::Color shapeOutlineHoverColor;
+	sf::Color shapeOutlineActiveColor;
 
 	std::string buttonText;
 

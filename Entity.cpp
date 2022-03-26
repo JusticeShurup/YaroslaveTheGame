@@ -135,7 +135,7 @@ void Entity::setGame(Game* game) {
 	this->game = game;
 }
 
-Game* Entity::getGame() {
+Game* Entity::getGame() const{
 	return game;
 }
 
@@ -169,11 +169,6 @@ std::string Entity::getName() const {
 	return nickname.getString();
 }
 //Name
-
-
-sf::FloatRect Entity::getGlobalBounds() {
-	return getObjectShape()->getGlobalBounds();
-}
 
 void Entity::setTexturesName(std::string name) {
 	GameObject::setName(name);
@@ -281,7 +276,7 @@ void Entity::update(float delta_time) {
 		in_fight_timer = 0;
 	}
 
-	if (add_hp_timer >= add_hp_time && health_points + 1 * (is_in_fight ? 1 : 10) <= 100) {
+	if (add_hp_timer >= add_hp_time && health_points + 1 * (is_in_fight ? 1 : 10) <= max_health_points) {
 
 		add_hp_timer = 0;
 		health_points += 1 * (is_in_fight ? 1 : 10);

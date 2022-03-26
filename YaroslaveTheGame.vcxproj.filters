@@ -120,6 +120,9 @@
     <ClCompile Include="Menu\PauseMenu.cpp">
       <Filter>Исходные файлы\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="Menu\PauseMenu.h">
       <Filter>Файлы заголовков\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -30,7 +30,7 @@ Game::Game() {
 
 	player->setPosition(6*32, 10*32);
 
-	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition());
+	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition(), window);
 	window->setView(*camera->getView());
 
 	is_gameover = false;
@@ -85,7 +85,7 @@ void Game::restartGame() {
 	enemies[0]->setGame(this);
 
 	player->setPosition(6 * 32, 10 * 32);
-	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition());
+	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition(), window);
 	window->setView(*camera->getView());
 	
 	is_gameover = false;
@@ -105,6 +105,10 @@ void Game::setIsRunning(bool flag) {
 
 Player* Game::getPlayer() {
 	return player;
+}
+
+Camera* Game::getCamera() {
+	return camera;
 }
 
 void Game::run() {
@@ -165,7 +169,7 @@ void Game::update() {
 
 			map->update(player);
 			camera->update(sf::Vector2f(player->getObjectPosition().x + player->getGlobalBounds().width / 2,
-				player->getObjectPosition().y + player->getGlobalBounds().height / 2), map);
+						   player->getObjectPosition().y + player->getGlobalBounds().height / 2), map);
 
 			window->setView(*camera->getView());
 		}

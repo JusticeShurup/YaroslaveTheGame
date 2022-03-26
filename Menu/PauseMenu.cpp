@@ -12,23 +12,40 @@ PauseMenu::PauseMenu(sf::RenderWindow* window, Game* game)
 	is_in_starty = false;
 	Menu::setActive(false);
 
+	getGame()->getCamera()->setSize(1920, 1080);
 	sf::Vector2f center_view = window->getView().getCenter();
-	background = sf::RectangleShape(sf::Vector2f(50, 100));
+	window->setView(*getGame()->getCamera()->getDefaultView());
+	background = sf::RectangleShape(sf::Vector2f(350, 700));
 	background.setPosition(center_view.x - background.getSize().x / 2, center_view.y - window->getView().getSize().y / 2 - background.getSize().y);
 	background.setOutlineThickness(1);
 	background.setOutlineColor(sf::Color::Black);
-	background.setTexture(TextureContainer::getInstance()->getPauseMenuTexture(0));
+	background.setFillColor(sf::Color(152, 168, 192, 183));
 
+	unsigned int letters_size = 60;
+	pause_text = new sf::Text;
+	pause_text->setCharacterSize(letters_size);
+	pause_text->setPosition(background.getPosition().x + background.getSize().x / 2 - pause_text->getGlobalBounds().width / 2, background.getPosition().y + 5);
+	pause_text->setFont(TextureContainer::getInstance()->getFont());
+	pause_text->setOutlineThickness(3);
+	pause_text->setOutlineColor(sf::Color::Black);
+	pause_text->setString("Pause");
 
-	buttons.push_back(new sf::RectangleShape(sf::Vector2f(40, 20)));
-	buttons[0]->setTexture(TextureContainer::getInstance()->getPauseMenuTexture(1), 1);
-	buttons[0]->setOutlineThickness(1);
-	buttons[0]->setOutlineColor(sf::Color::Black);
+	buttons.push_back(new Button(300, 100, 0, 0, "Resume", letters_size));
+	buttons.push_back(new Button(300, 100, 0, 0, "Exit", letters_size));
+	for (int i = 0; i < 2; i++) {
+		buttons[i]->hideShape(false);
+		buttons[i]->setShapeColor("idle", sf::Color(152, 168, 192, 183));
+		buttons[i]->setShapeColor("hover", sf::Color(152, 168, 230, 255));
+		buttons[i]->setShapeColor("active", sf::Color(152, 168, 230, 255));
+		buttons[i]->setOutlineShapeColor("hover", sf::Color::Black);
+		buttons[i]->setOutlineShapeColor("active", sf::Color::Black);
+		buttons[i]->setTextColor("idle", sf::Color::White);
+		buttons[i]->setTextColor("hover", sf::Color(200, 200, 200));
+		buttons[i]->setTextColor("active", sf::Color(200, 200, 200));
+		buttons[i]->getText()->setOutlineThickness(3);
+		buttons[i]->getText()->setOutlineColor(sf::Color::Black);
+	}
 
-	buttons.push_back(new sf::RectangleShape(sf::Vector2f(40, 20)));
-	buttons[1]->setTexture(TextureContainer::getInstance()->getPauseMenuTexture(3), 1);
-	buttons[1]->setOutlineThickness(1);
-	buttons[1]->setOutlineColor(sf::Color::Black);
 
 }
 
@@ -43,36 +60,12 @@ void PauseMenu::setActive(bool flag) {
 }
 
 void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
+	camera->setSize(1920, 1080);
 	sf::Vector2f pos = background.getPosition();
 	float targetY = camera->getView()->getCenter().y - background.getSize().y / 2; // coordinate Y where background must be
 	float startY = camera->getView()->getCenter().y - background.getSize().y - camera->getView()->getSize().y / 2;
 
-	sf::Vector2f mouse_pos = getWindow()->mapPixelToCoords(sf::Mouse::getPosition());
-
-	for (int i = 1; i <= buttons.size(); i++) {
-		if (buttons[i - 1]->getGlobalBounds().contains(mouse_pos.x - 1, mouse_pos.y - 7)) {
-			buttons[i - 1]->setTexture(TextureContainer::getInstance()->getPauseMenuTexture(i * 2));
-			if (can_play_sounds[i - 1]) {
-				SoundContainer::getInstance()->getSoundByName("Hover")->play();
-				can_play_sounds[i - 1] = false;
-			}
-			if (event.type == event.MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-				if (i - 1 == 0) {
-					setActive(false);
-				}
-				else if (i - 1 == 1) {
-					getGame()->setMenu(new MainMenu(getWindow(), getGame()));
-					return;
-				}
-			}
-		}
-		else {
-			buttons[i - 1]->setTexture(TextureContainer::getInstance()->getPauseMenuTexture(i * 2 - 1));
-			can_play_sounds[i - 1] = true;
-		}
-	}
-
-
+	sf::Vector2f mouse_pos = sf::Vector2f(getWindow()->mapPixelToCoords(sf::Mouse::getPosition()) - sf::Vector2f(0, 24));
 	// Ѕлок прокрутки менюшки
 	// ¬низ
 	if (!is_background_in_pos && isActive()) {
@@ -81,8 +74,8 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 			pos = background.getPosition();
 			is_in_starty = true;
 		}
-		if (pos.y + 500 * delta_time <= targetY) {
-			background.setPosition(camera->getView()->getCenter().x - background.getSize().x / 2, pos.y + 500 * delta_time);
+		if (pos.y + 1500 * delta_time <= targetY) {
+			background.setPosition(camera->getView()->getCenter().x - background.getSize().x / 2, pos.y + 1500 * delta_time);
 		}
 		else {
 			background.setPosition(camera->getView()->getCenter().x - background.getSize().x / 2, targetY);
@@ -96,7 +89,7 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 	// ¬верх
 	else if (is_background_in_pos && can_close) {
 		if (pos.y >= startY) {
-			background.setPosition(camera->getView()->getCenter().x - background.getSize().x / 2, pos.y - 500 * delta_time);
+			background.setPosition(camera->getView()->getCenter().x - background.getSize().x / 2, pos.y - 1500 * delta_time);
 		}
 		else {
 			background.setPosition(camera->getView()->getCenter().x - background.getSize().x / 2, startY);
@@ -108,15 +101,42 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 			is_in_starty = false;
 		}
 	}
+	pause_text->setPosition(background.getPosition().x + background.getSize().x / 2 - pause_text->getGlobalBounds().width / 2, background.getPosition().y);
 	// ¬верх
 	// Ѕлок прокрутки менюшки
+	camera->setSize(300, 300);
 
-	buttons[0]->setPosition(pos.x + 5, pos.y + 20);
-	buttons[1]->setPosition(pos.x + 5, pos.y + 70);
+	buttons[0]->setPosition(pos.x + background.getSize().x / 2 - buttons[0]->getShape()->getSize().x / 2, pos.y + 80);
+	buttons[1]->setPosition(pos.x + background.getSize().x / 2 - buttons[0]->getShape()->getSize().x / 2, pos.y + background.getSize().y - 150);
+	
+
+	if (!(!is_background_in_pos && isActive()) && !(is_background_in_pos && can_close)) {
+		for (int i = 0; i < buttons.size(); i++) {
+			buttons[i]->update(mouse_pos, event);
+		}
+		for (int i = 0; i < buttons.size(); i++) {
+			if (buttons[i]->isClicked()) {
+				if (event.type == event.MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+					if (i == 0) {
+						setActive(false);
+					}
+					else if (i == 1) {
+						getGame()->setMenu(new MainMenu(getWindow(), getGame()));
+						return;
+					}
+				}
+			}
+		}
+	}
+
+
 }
 
 void PauseMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+	getGame()->getCamera()->setSize(1920, 1080);
 	target.draw(background);
+	target.draw(*pause_text);
 	for (int i = 0; i < buttons.size(); i++) target.draw(*buttons[i]);
+	getGame()->getCamera()->setSize(300, 300);
 }
 

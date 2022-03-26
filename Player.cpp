@@ -6,13 +6,20 @@
 #include "States/WalkState.h"
 #include "States/AttackState.h"
 #include "States/HurtState.h"
-
+#include "Game.h"
 
 Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 	current_xp = 0;
 	level = 1;
 	target_lock_timer = 0;
 	xp_to_nextlevel = 10;
+	
+	strength = 1;
+	fortitude = 1;
+	stamina = 1;
+	free_atribute_points = 0;
+
+	inventory = nullptr;
 	damage_delivered = false;
 	entity_target = nullptr;
 	target = nullptr;
@@ -21,14 +28,34 @@ Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 
 Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name)
 	: Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {
+
 	current_xp = 0;
 	level = 1;
+
+	strength = 1;
+	fortitude = 1;
+	stamina = 1;
+	free_atribute_points = 0;
+
 	xp_to_nextlevel = 10;
 	target_lock_timer = 0;
+
+	inventory = new GUI(this);
 	damage_delivered = false;
 	entity_target = nullptr;
 	target = nullptr;
-
+	
+	player_name = new sf::Text;
+	player_name->setCharacterSize(20);
+	player_name->setString("Yaroslave");
+	player_name->setFont(TextureContainer::getInstance()->getFont());
+	player_name->setFillColor(sf::Color::White);
+	player_name->setOutlineColor(sf::Color::Black);
+	player_name->setOutlineThickness(2);
+	player_name_pos = sf::Vector2f(getObjectPosition());
+	player_name->setPosition(player_name_pos);
+	player_name_pos.x = 0;
+	player_name_pos.y = 0;
 	setCanSwitchState(true);
 }
 
@@ -58,6 +85,8 @@ void Player::lockNearestTarget(Map* map) {
 
 void Player::update(sf::Event& event, float dt, Map* map) {
 
+	inventory->update(event, game->getCamera(), dt);
+	
 	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	float speed = getSpeedValue();
 	float dx = 0;
@@ -168,18 +197,51 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 	sf::Vector2f new_pos(getObjectPosition());
 
 	if (!map->checkCollisionWithMap(sf::Vector2f(pos.x, pos.y + dy), this)) {
+		if (getGame()->getCamera()->isCameraLockedY()) {
+			player_name_pos.y += dy * (1920 / 300);
+		}
+		else {
+			player_name_pos.y = 0;
+		}
 		if (pos.y + dy > 0 && pos.y + dy < mapEndY) {
 			new_pos.y += dy;
 		}
 	}
 	if (!map->checkCollisionWithMap(sf::Vector2f(pos.x + dx, pos.y), this)) {
+		if (getGame()->getCamera()->isCameraLockedX()) {
+			player_name_pos.x += dx * (1080 / 300);
+		}
+		else {
+			player_name_pos.x = 0;
+		}
 		if (pos.x + dx > 0 && pos.x + dx < mapEndX) {
 			new_pos.x += dx;
 		}
 	}
 
 	setPosition(new_pos);
+	
 	Entity::update(dt);
+}
+
+int Player::getXP() const{
+	return current_xp;
+}
+
+int Player::getXPToNextLevel() const {
+	return xp_to_nextlevel;
+}
+
+void Player::setXP(int xp) {
+	if (xp > this->level * 10) {
+		int level;
+		for (level = 1; xp > xp_to_nextlevel; level++) {
+			xp -= 10 * level;
+		}
+		current_xp = xp;
+		this->level = level;
+		free_atribute_points = level - 1;
+	}
 }
 
 void Player::addXP(int xp) {
@@ -187,13 +249,69 @@ void Player::addXP(int xp) {
 	if (current_xp >= xp_to_nextlevel) {
 		current_xp %= xp;
 		level++;
+		free_atribute_points++;
 		xp_to_nextlevel = 10 * level;
 	}
-	std::cout << level << " " << current_xp << " " << xp_to_nextlevel << std::endl;
+}
+
+void Player::lostXP(int xp) {
+	if (xp > 0) {
+		if (current_xp - xp <= 0) {
+			current_xp = 0;
+		}
+		else {
+			current_xp -= xp;
+		}
+	}
 }
 
 
+//Atributes
+void Player::addStrength(int points) {
+	strength += points;
+	setDamageValue(getDamageValue() - 2 * (strength - points) + 2 * strength);
+}
+
+int Player::getStrength() const {
+	return strength;
+}
+
+void Player::addFortitude(int points) {
+	fortitude += points;
+	setMaxHPValue(getMaxHPValue() - 10 * (fortitude - points) + 10 * fortitude);
+}
+
+int Player::getFortitude() const {
+	return fortitude;
+}
+
+void Player::addStamina(int points) {
+	stamina += points;
+	setMaxStaminaValue(getMaxStaminaValue() - 10 * (stamina - points) + 10 * stamina);
+}
+
+int Player::getStamina() const {
+	return stamina;
+}
+
+void Player::addFreeAtributePoints(int points) {
+	free_atribute_points += points;
+}
+
+int Player::getFreeAtributePoints() const {
+	return free_atribute_points;
+}
+//Atributes
+
+
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	sf::RenderStates text_states;
+
+	getGame()->getCamera()->setSize(1920, 1080);
+	text_states.transform = getGame()->getCamera()->getRenderView()->getInverseTransform() * getGame()->getCamera()->getTransform(0 + getGlobalBounds().width * 3, 0 + getGlobalBounds().height * 2.25, 1920, 1080);
+	if (inventory->isActive()) target.draw(*inventory, text_states);
+	getGame()->getCamera()->setSize(300, 300);
+	target.draw(*player_name, text_states);
 	Entity::draw(target, states);
 	if (this->target) {
 		target.draw(*this->target);

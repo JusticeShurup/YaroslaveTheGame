@@ -18,8 +18,8 @@ private:
 	bool is_in_starty;
 	bool can_close;
 	sf::RectangleShape background;
-
-	std::vector<sf::RectangleShape*> buttons;
+	sf::Text* pause_text;
+	std::vector<Button*> buttons;
 	std::vector<sf::Texture*> button_textures; // in 0 position - idle textures, in 1 position hover textures
 
 	std::vector<bool> can_play_sounds;

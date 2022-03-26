@@ -2,6 +2,7 @@
 #include "../Game.h"
 #include "../Sounds/SoundContainer.h"
 #include "../TextureContainer/TextureContainer.h"
+#include <iostream>
 
 MainMenu::MainMenu(sf::RenderWindow* window, Game* game) : Menu(window, game) {
 	buttons.push_back(new Button(400, 100, 200, 300, "Play"));
@@ -12,14 +13,26 @@ MainMenu::MainMenu(sf::RenderWindow* window, Game* game) : Menu(window, game) {
 	buttons[1]->setShapeColor("idle", sf::Color::White);
 	buttons[1]->setShapeColor("hover", sf::Color(128, 128, 128, 255));
 	buttons[1]->setShapeColor("active", sf::Color(128, 128, 128, 255));
+
 	background[0] = new sf::RectangleShape(sf::Vector2f(window->getSize()));
 	background[0]->setTexture(TextureContainer::getInstance()->getMainMenuTexture(0));
 	background[0]->setPosition(0, 0);
 	background[1] = new sf::RectangleShape(sf::Vector2f(window->getSize()));
 	background[1]->setTexture(TextureContainer::getInstance()->getMainMenuTexture(0));
 	background[1]->setPosition(window->getSize().x, 0);
+	title = sf::RectangleShape(sf::Vector2f(700, 400));
+	title.setTexture(TextureContainer::getInstance()->getMainMenuTexture(1));
+	title.setPosition(buttons[0]->getShape()->getPosition().x + buttons[0]->getShape()->getSize().x / 2 - title.getSize().x / 2,
+					  0);
+
 	is_camera_switched = false;
 	SoundContainer::getInstance()->getMenuMusic()[0]->play();
+	SoundContainer::getInstance()->getMenuMusic()[0]->setLoop(true);
+	
+	texture_for_anim = TextureContainer::getInstance()->getEntityTextures("Tojic", "Run", "East");
+	for_anim = sf::RectangleShape(sf::Vector2f(16*2, 32*4));
+	for_anim.setTexture(texture_for_anim[0]);
+	for_anim.setPosition(buttons[0]->getShape()->getPosition().x, buttons[0]->getShape()->getPosition().y - 40);
 }
 
 MainMenu::~MainMenu() {
@@ -30,9 +43,11 @@ MainMenu::~MainMenu() {
 
 void MainMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 	if (isActive()) {
-		if (SoundContainer::getInstance()->getMenuMusic()[0]->getStatus() != sf::Music::Playing) {
-			SoundContainer::getInstance()->getMenuMusic()[0]->play();
+		
+		for (int i = 0; i < 4; i++) {
+			for_anim.setTexture(texture_for_anim[i]);
 		}
+		for_anim.setPosition(for_anim.getPosition().x + 50 * delta_time, for_anim.getPosition().y);
 		if (background[0]->getPosition().x <= -camera->getView()->getSize().x) {
 			background[0]->setPosition(background[1]->getPosition().x + background[1]->getSize().x, 0);
 		}
@@ -71,5 +86,7 @@ void MainMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 void MainMenu::draw(sf::RenderTarget& target, sf::RenderStates) const {
 	target.draw(*background[0]);
 	target.draw(*background[1]);
+	target.draw(title);
 	for (int i = 0; i < buttons.size(); i++) target.draw(*buttons[i]);
+	//target.draw(for_anim);
 }

@@ -149,6 +149,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\Tileset.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Map\Tileset.h" />
     <ClInclude Include="Entity.h" />

@@ -14,9 +14,11 @@ public:
 private: 
 	bool is_camera_switched;
 	sf::RectangleShape* background[2];
-	sf::Text title;
+	sf::RectangleShape title;
 
 	std::vector<Button*> buttons;
+	std::vector<sf::Texture*> texture_for_anim;
+	sf::RectangleShape for_anim;
 };
 #endif
 
