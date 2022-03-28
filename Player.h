@@ -18,6 +18,8 @@ public:
 	void addXP(int xp);
 	void lostXP(int xp);
 
+	void addAtributeByName(std::string name, int points = 1);
+	int getAtributeByName(std::string name);
 	void addStrength(int points = 1);
 	int getStrength() const;
 	void addFortitude(int points = 1);
@@ -25,6 +27,7 @@ public:
 	void addStamina(int points = 1);
 	int getStamina() const;
 	void addFreeAtributePoints(int points = 1);
+	void setFreeAtributePoints(int points);
 	int getFreeAtributePoints() const;
 
 
@@ -34,7 +37,6 @@ private:
 
 	sf::Text* player_name;
 	sf::Vector2f player_name_pos;
-	GUI* inventory;
 	sf::RectangleShape* target;
 	Entity* entity_target;
 	float target_lock_timer;

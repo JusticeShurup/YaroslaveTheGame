@@ -8,7 +8,7 @@ using namespace sf;
 Button::Button() {}
 
 Button::Button(float widht, float height, float posX, float posY, std::string name)
-	: widht(widht), height(height), posX(posX), posY(posY), buttonText(name)
+	: buttonText(name)
 {
 
 	textIdleColor = sf::Color::Black;
@@ -22,15 +22,18 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 	text.setCharacterSize(50);
 	text.setFillColor(Color::Black);
 	text.setString(name);
-	text.setPosition(shape.getPosition().x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-				     shape.getPosition().y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
+	text_dx = 0; 
+	text_dy = 0;
+	text.setPosition(shape.getPosition().x + text_dx + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
+				     shape.getPosition().y + text_dy + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 
-	canPlaySound = true;
+	can_play_hover_sound = true;
+	can_play_click_sound = true;
 	shape_is_hide = false;
 }
 
 Button::Button(float widht, float height, float posX, float posY, std::string name, bool hide_shape)
-	: widht(widht), height(height), posX(posX), posY(posY), buttonText(name)
+	: buttonText(name)
 {
 	textIdleColor = sf::Color::Black;
 	textHoverColor = sf::Color::White;
@@ -55,17 +58,18 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 	text.setCharacterSize(50);
 	text.setFillColor(Color::Black);
 	text.setString(name);
-	text.setPosition(shape.getPosition().x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-					 shape.getPosition().y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
+	text_dx = 0;
+	text_dy = 0;
+	text.setPosition(shape.getPosition().x + text_dx +((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
+					 shape.getPosition().y + text_dy + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 
-	buffer.loadFromFile("Sounds/menu_item_howered.wav");
-	sound.setBuffer(buffer);
-	canPlaySound = true;
+	can_play_hover_sound = true;
+	can_play_click_sound = true;
 	shape_is_hide = hide_shape;
 }
 
 Button::Button(float widht, float height, float posX, float posY, std::string name, unsigned int letters_size)
-	: widht(widht), height(height), posX(posX), posY(posY), buttonText(name)
+	: buttonText(name)
 {
 	textIdleColor = sf::Color::Black;
 	textHoverColor = sf::Color::White;
@@ -89,8 +93,14 @@ Button::Button(float widht, float height, float posX, float posY, std::string na
 	text.setCharacterSize(letters_size);
 	text.setFillColor(Color::Black);
 	text.setString(name);
+	text_dx = 0;
+	text_dy = 0;
 	text.setPosition(shape.getPosition().x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
 					 shape.getPosition().y + text.getGlobalBounds().height / 2);
+	
+
+	can_play_hover_sound = true;
+	can_play_click_sound = true;
 }
 
 bool Button::isClicked() {
@@ -110,15 +120,15 @@ bool Button::isShapeHidden() const {
 
 void Button::setPosition(float x, float y) {
 	shape.setPosition(x, y);
-	text.setPosition(x + (shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2),
-					 y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
+	text.setPosition(x + text_dx +(shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2),
+					 y + text_dy + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 
 }
 
 void Button::setPosition(sf::Vector2f position) {
 	shape.setPosition(position);
-	text.setPosition(position.x + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
-					 position.y + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
+	text.setPosition(position.x + text_dx + ((shape.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2)),
+					 position.y + text_dy + ((shape.getGlobalBounds().height / 2) - (text.getGlobalBounds().height / 2)) / 2);
 }
 
 void Button::setTextColor(std::string sost, sf::Color color) {
@@ -139,6 +149,22 @@ void Button::setOutlineShapeColor(std::string sost, sf::Color color) {
 	else if (sost == "active") shapeOutlineActiveColor = color;
 }
 
+void Button::setTextDX(float value) {
+	text_dx = value;
+}
+
+float Button::getTextDX() {
+	return text_dx;
+}
+
+void Button::setTextDY(float value) {
+	text_dy = value;
+}
+
+float Button::getTextDY() {
+	return text_dy;
+}
+
 sf::RectangleShape* Button::getShape() {
 	return &shape;
 }
@@ -155,31 +181,36 @@ void Button::update(Vector2f pos, Event& event) {
 	{
 		state = BTN_HOVER;
 
-		if (canPlaySound) SoundContainer::getInstance()->getSoundByName("Hover")->play();
-		canPlaySound = false;
+		if (can_play_hover_sound) SoundContainer::getInstance()->getSoundByName("Hover")->play();
+		can_play_hover_sound = false;
 		//Pressed
 		if (event.type == event.MouseButtonReleased && event.mouseButton.button == Mouse::Left)
 		{
 			state = BTN_ACTIVE;
-			if(text.getString() != "Exit") SoundContainer::getInstance()->getSoundByName("Active")->play();
+			if(can_play_click_sound) SoundContainer::getInstance()->getSoundByName("Active")->play();
+			can_play_click_sound = false;
+			event.type = event.MouseMoved;
+		}
+		else {
+			can_play_click_sound = true;
 		}
 	}
 	else {
-		canPlaySound = true;
+		can_play_hover_sound = true;
 	}
 
 	switch (state)
 	{
 	case BTN_IDLE:
 		this->shape.setFillColor(shapeIdleColor);
-		this->shape.setOutlineThickness(5);
+		this->shape.setOutlineThickness(3);
 		this->text.setFillColor(textIdleColor);
 		this->shape.setOutlineColor(Color::Black);
 		break;
 
 	case BTN_HOVER:
 		this->shape.setFillColor(shapeHoverColor);
-		this->shape.setOutlineThickness(5);
+		this->shape.setOutlineThickness(3);
 		this->text.setFillColor(textHoverColor);
 		this->shape.setOutlineColor(Color(127, 127, 127));
 		break;

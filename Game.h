@@ -55,6 +55,8 @@ private:
 	bool is_active;
 
 	Player* player;
+	
+	sf::RectangleShape background;
 	GUI* gui;
 
 	std::vector<Enemy*> enemies;

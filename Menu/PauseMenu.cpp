@@ -116,14 +116,12 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 		}
 		for (int i = 0; i < buttons.size(); i++) {
 			if (buttons[i]->isClicked()) {
-				if (event.type == event.MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-					if (i == 0) {
-						setActive(false);
-					}
-					else if (i == 1) {
-						getGame()->setMenu(new MainMenu(getWindow(), getGame()));
-						return;
-					}
+				if (i == 0) {
+					setActive(false);
+				}
+				else if (i == 1) {
+					getGame()->setMenu(new MainMenu(getWindow(), getGame()));
+					return;
 				}
 			}
 		}

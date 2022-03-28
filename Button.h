@@ -30,6 +30,11 @@ public:
 	void setShapeColor(std::string sost, sf::Color color);
 	void setOutlineShapeColor(std::string sost, sf::Color color);
 
+	void setTextDX(float value);
+	float getTextDX();
+	void setTextDY(float value);
+	float getTextDY();
+
 	sf::RectangleShape* getShape();
 	sf::Text* getText();
 
@@ -42,10 +47,10 @@ private:
 
 	short unsigned state;
 
-	float widht;
-	float height;
-	float posX;
-	float posY;
+	unsigned int outline_thickness;
+
+	float text_dx; // The amount by which you want to shift the text in X
+	float text_dy; // The amount by which you want to shift the text in Y
 
 	sf::Color textIdleColor;
 	sf::Color textHoverColor;
@@ -64,9 +69,8 @@ private:
 	sf::RectangleShape shape;
 	sf::Text text;
 
-	sf::SoundBuffer buffer;
-	sf::Sound sound;
-	bool canPlaySound;
+	bool can_play_hover_sound;
+	bool can_play_click_sound;
 
 };
 #endif

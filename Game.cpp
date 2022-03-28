@@ -4,6 +4,7 @@
 #include "Sounds/SoundContainer.h"
 #include <typeinfo>
 #include <thread>
+#include <iostream>
 
 Game::Game() {
 	settings.antialiasingLevel = 100;
@@ -43,6 +44,10 @@ Game::Game() {
 	gameover_text.setFillColor(sf::Color::White);
 	gameover_text.setCharacterSize(200);
 	gameover_text.setFont(TextureContainer::getInstance()->getFont());
+
+	gui = new GUI(player);	
+	background = sf::RectangleShape(sf::Vector2f(window->getSize()));
+	background.setFillColor(sf::Color(0, 0, 0, 128));
 }
 
 Game::~Game() {
@@ -138,6 +143,13 @@ void Game::update() {
 			if (event.key.code == sf::Keyboard::Escape && typeid(*menu) != typeid(MainMenu) ) {
 				menu->setActive(!menu->isActive());
 				menu->update(event, camera, delta_time);
+				background.setPosition(camera->getView()->getCenter().x - camera->getView()->getSize().x,
+					camera->getView()->getCenter().y - camera->getView()->getSize().y);
+			}
+			else if (event.key.code == sf::Keyboard::C) {
+				gui->open(!gui->isActive());
+				background.setPosition(camera->getView()->getCenter().x - camera->getView()->getSize().x,
+									   camera->getView()->getCenter().y - camera->getView()->getSize().y);
 			}
 		}
 	}
@@ -165,9 +177,13 @@ void Game::update() {
 			}
 
 			for (int i = 0; i < enemies.size(); i++) enemies[i]->update(delta_time, player, map);
+			
+			if (gui->isActive()) {
+				gui->update(event, camera, delta_time);
+			}
 			player->update(event, delta_time, map);
-
 			map->update(player);
+
 			camera->update(sf::Vector2f(player->getObjectPosition().x + player->getGlobalBounds().width / 2,
 						   player->getObjectPosition().y + player->getGlobalBounds().height / 2), map);
 
@@ -195,7 +211,17 @@ void Game::render() {
 		if (typeid(*menu) != typeid(MainMenu)) {
 			window->draw(*map);
 		}
-		if (menu->isActive()) window->draw(*menu);
+		if (menu->isActive()) {
+			window->draw(background);
+			window->draw(*menu);
+		}
+
+		if (gui->isActive()) {
+			window->draw(background);
+			camera->setSize(1920, 1080);
+			window->draw(*gui);
+			camera->setSize(300, 300);
+		}
 	}
 	else {
 		window->draw(gameover_text);

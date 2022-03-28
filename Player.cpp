@@ -19,7 +19,6 @@ Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 	stamina = 1;
 	free_atribute_points = 0;
 
-	inventory = nullptr;
 	damage_delivered = false;
 	entity_target = nullptr;
 	target = nullptr;
@@ -40,7 +39,6 @@ Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	xp_to_nextlevel = 10;
 	target_lock_timer = 0;
 
-	inventory = new GUI(this);
 	damage_delivered = false;
 	entity_target = nullptr;
 	target = nullptr;
@@ -84,8 +82,6 @@ void Player::lockNearestTarget(Map* map) {
 }
 
 void Player::update(sf::Event& event, float dt, Map* map) {
-
-	inventory->update(event, game->getCamera(), dt);
 	
 	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	float speed = getSpeedValue();
@@ -267,9 +263,31 @@ void Player::lostXP(int xp) {
 
 
 //Atributes
+void Player::addAtributeByName(std::string name, int points) {
+	if (name == "Strength") {
+		strength += points;
+		setDamageValue(20 + 2 * (strength - 1));
+	}
+	else if (name == "Fortitude") {
+		fortitude += points;
+		setMaxHPValue(100 + 10 * (fortitude - 1));
+	}
+	else if (name == "Stamina") {
+		stamina += points;
+		setMaxStaminaValue(100 + 10 * (stamina - 1));
+	}
+
+}
+
+int Player::getAtributeByName(std::string name) {
+	if (name == "Strength") return strength;
+	else if (name == "Fortitude") return fortitude;
+	else if (name == "Stamina") return stamina;
+}
+
 void Player::addStrength(int points) {
 	strength += points;
-	setDamageValue(getDamageValue() - 2 * (strength - points) + 2 * strength);
+	setDamageValue(20 + 2 * (strength - 1));
 }
 
 int Player::getStrength() const {
@@ -278,7 +296,7 @@ int Player::getStrength() const {
 
 void Player::addFortitude(int points) {
 	fortitude += points;
-	setMaxHPValue(getMaxHPValue() - 10 * (fortitude - points) + 10 * fortitude);
+	setMaxHPValue(100 + 10 * (fortitude - 1));
 }
 
 int Player::getFortitude() const {
@@ -287,11 +305,15 @@ int Player::getFortitude() const {
 
 void Player::addStamina(int points) {
 	stamina += points;
-	setMaxStaminaValue(getMaxStaminaValue() - 10 * (stamina - points) + 10 * stamina);
+	setMaxStaminaValue(100 + 10 * (stamina - 1));
 }
 
 int Player::getStamina() const {
 	return stamina;
+}
+
+void Player::setFreeAtributePoints(int points) {
+	free_atribute_points = points;
 }
 
 void Player::addFreeAtributePoints(int points) {
@@ -309,7 +331,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	getGame()->getCamera()->setSize(1920, 1080);
 	text_states.transform = getGame()->getCamera()->getRenderView()->getInverseTransform() * getGame()->getCamera()->getTransform(0 + getGlobalBounds().width * 3, 0 + getGlobalBounds().height * 2.25, 1920, 1080);
-	if (inventory->isActive()) target.draw(*inventory, text_states);
 	getGame()->getCamera()->setSize(300, 300);
 	target.draw(*player_name, text_states);
 	Entity::draw(target, states);

@@ -12,7 +12,7 @@ Camera::Camera(sf::Vector2f size, sf::Vector2f position, sf::RenderWindow* windo
 }
 
 sf::View* Camera::getDefaultView() {
-	view.setSize(300, 300);
+	setSize(300, 300);
 	return &view;
 }
 

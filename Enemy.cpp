@@ -21,7 +21,7 @@ Enemy::Enemy(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string tex
 }
 
 Enemy::~Enemy() {
-	game->getPlayer()->addXP(2);
+	game->getPlayer()->addXP(10);
 }
 
 void Enemy::update(float delta_time, Entity* target, Map* map) {
