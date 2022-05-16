@@ -1,11 +1,11 @@
-#include "PauseMenu.h"
+#include "ProfileMenu.h"
 #include "../TextureContainer/TextureContainer.h"
 #include "../Sounds/SoundContainer.h"
 #include "../Game.h"
 #include "MainMenu.h"
 
-PauseMenu::PauseMenu(sf::RenderWindow* window, Game* game) 
-	: Menu(window, game), can_play_sounds{true} {
+ProfileMenu::ProfileMenu(sf::RenderWindow* window, Game* game)
+	: Menu(window, game), can_play_sounds{ true } {
 
 	is_background_in_pos = false;
 	can_close = false;
@@ -51,9 +51,9 @@ PauseMenu::PauseMenu(sf::RenderWindow* window, Game* game)
 
 }
 
-PauseMenu::~PauseMenu(){}
+ProfileMenu::~ProfileMenu() {}
 
-void PauseMenu::setActive(bool flag) {
+void ProfileMenu::setActive(bool flag) {
 	if (flag) Menu::setActive(flag);
 
 	if (!flag) {
@@ -61,7 +61,7 @@ void PauseMenu::setActive(bool flag) {
 	}
 }
 
-void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
+void ProfileMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 	camera->setSize(1920, 1080);
 	sf::Vector2f pos = background.getPosition();
 	float targetY = camera->getView()->getCenter().y - background.getSize().y / 2; // coordinate Y where background must be
@@ -110,7 +110,7 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 
 	buttons[0]->setPosition(pos.x + background.getSize().x / 2 - buttons[0]->getShape()->getSize().x / 2, pos.y + 80);
 	buttons[1]->setPosition(pos.x + background.getSize().x / 2 - buttons[0]->getShape()->getSize().x / 2, pos.y + background.getSize().y - 150);
-	
+
 
 	if (!(!is_background_in_pos && isActive()) && !(is_background_in_pos && can_close)) {
 		for (int i = 0; i < buttons.size(); i++) {
@@ -132,7 +132,7 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 
 }
 
-void PauseMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+void ProfileMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	getGame()->getCamera()->setSize(1920, 1080);
 	target.draw(background);
 	target.draw(*pause_text);

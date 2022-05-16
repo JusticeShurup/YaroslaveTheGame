@@ -5,8 +5,13 @@
 #include <typeinfo>
 #include <thread>
 #include <iostream>
+#include <fstream>
 
-Game::Game() {
+
+Game::Game() : 
+	server(main_player, this, "127.0.0.1", 1703, rand() % 700 + 1024), 
+	server_thr(&Server::run, &server)
+{	
 	settings.antialiasingLevel = 100;
 	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "YaroslaveTheGame", sf::Style::Default, settings);
 
@@ -17,21 +22,32 @@ Game::Game() {
 	menu = new MainMenu(window, this);
 	is_active = true;
 
-	player = new Player(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 20, "Yaroslave");
-	player->setNewHitboxPosition(sf::Vector2f(4, 8));
-	player->setGame(this);
+	std::string nickname;
+	std::cin >> nickname;
 
-	map->addGameObject(player);
+	while (!server.join(nickname)) {
+		std::cin >> nickname;
+	}
+	main_player = new Player(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 20, nickname, gui);
+	server.setMainPlayer(main_player);
 
-	enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
-	enemies[0]->setPosition(8 * 32, 10 * 32);
-	enemies[0]->setNewHitboxPosition(sf::Vector2f(4, 8));
-	map->addEntity(enemies[0]);
-	enemies[0]->setGame(this);
+	gui = new GUI(main_player);	
+	main_player->setGUI(gui);
+	main_player->setNewHitboxPosition(sf::Vector2f(4, 8));
+	main_player->setGame(this);
 
-	player->setPosition(6*32, 10*32);
+	map->addGameObject(main_player);
 
-	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition(), window);
+	//enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
+	//enemies[0]->setPosition(8 * 32, 10 * 32);
+	//enemies[0]->setNewHitboxPosition(sf::Vector2f(4, 8));
+	//map->addEntity(enemies[0]);
+	//enemies[0]->setGame(this);
+
+	main_player->setPosition(6*32, 10*32);
+
+	sf::Vector2i map_end(map->getSize().x * map->getTilesetSize().x, map->getSize().y * map->getTilesetSize().y);
+	camera = new Camera(sf::Vector2f(300, 300), main_player->getObjectPosition(), window, map_end);
 	window->setView(*camera->getView());
 
 	is_gameover = false;
@@ -44,16 +60,14 @@ Game::Game() {
 	gameover_text.setFillColor(sf::Color::White);
 	gameover_text.setCharacterSize(200);
 	gameover_text.setFont(TextureContainer::getInstance()->getFont());
-
-	gui = new GUI(player);	
-	background = sf::RectangleShape(sf::Vector2f(window->getSize()));
-	background.setFillColor(sf::Color(0, 0, 0, 128));
+	
+	server_thr.launch();
 }
 
 Game::~Game() {
 	delete map;
 	delete menu;
-	delete player;
+	delete main_player;
 	for (int i = 0; i < enemies.size(); i++) delete enemies[i];
 	delete camera;
 	delete window;
@@ -72,16 +86,16 @@ void Game::restartGame() {
 		map->removeGameObject(enemies[i]);
 		delete enemies[i];
 	}
-	map->removeGameObject(player);
-	delete player;
+	map->removeGameObject(main_player);
+	delete main_player;
 	delete camera;
 	enemies.clear();
 	
-	player = new Player(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 20, "Yaroslave");
-	player->setNewHitboxPosition(sf::Vector2f(4, 8));
-	player->setGame(this);
+	main_player = new Player(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "NES_Slave", 100, 100, 0.15, 20, "Yaroslave", gui);
+	main_player->setNewHitboxPosition(sf::Vector2f(4, 8));
+	main_player->setGame(this);
 
-	map->addGameObject(player);
+	map->addGameObject(main_player);
 
 	enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
 	enemies[0]->setPosition(8 * 32, 10 * 32);
@@ -89,8 +103,9 @@ void Game::restartGame() {
 	map->addEntity(enemies[0]);
 	enemies[0]->setGame(this);
 
-	player->setPosition(6 * 32, 10 * 32);
-	camera = new Camera(sf::Vector2f(300, 300), player->getObjectPosition(), window);
+	main_player->setPosition(6 * 32, 10 * 32);
+	sf::Vector2i map_end(map->getSize().x * map->getTilesetSize().x, map->getSize().y * map->getTilesetSize().y);
+	camera = new Camera(sf::Vector2f(300, 300), main_player->getObjectPosition(), window, map_end);
 	window->setView(*camera->getView());
 	
 	is_gameover = false;
@@ -109,11 +124,20 @@ void Game::setIsRunning(bool flag) {
 }
 
 Player* Game::getPlayer() {
-	return player;
+	return main_player;
+}
+
+void Game::addPlayer(Entity* player) {
+	players[player->getNickname()->getString()] = player;
+	map->addEntity(player);
 }
 
 Camera* Game::getCamera() {
 	return camera;
+}
+
+Server* Game::getServer() {
+	return &server;
 }
 
 void Game::run() {
@@ -122,6 +146,7 @@ void Game::run() {
 		update();
 		render();
 	}
+	server_thr.terminate();
 }
 
 void Game::update() {
@@ -140,28 +165,31 @@ void Game::update() {
 			is_active = true;
 		}
 		if (event.type == sf::Event::KeyReleased) {
-			if (event.key.code == sf::Keyboard::Escape && typeid(*menu) != typeid(MainMenu) ) {
-				menu->setActive(!menu->isActive());
-				menu->update(event, camera, delta_time);
-				background.setPosition(camera->getView()->getCenter().x - camera->getView()->getSize().x,
-					camera->getView()->getCenter().y - camera->getView()->getSize().y);
-			}
-			else if (event.key.code == sf::Keyboard::C) {
-				gui->open(!gui->isActive());
-				background.setPosition(camera->getView()->getCenter().x - camera->getView()->getSize().x,
-									   camera->getView()->getCenter().y - camera->getView()->getSize().y);
+			if (typeid(*menu) != typeid(MainMenu)) {
+				if (event.key.code == sf::Keyboard::Escape) {
+					menu->setActive(!menu->isActive());
+					menu->update(event, camera, delta_time);
+					background.setPosition(camera->getView()->getCenter().x - camera->getView()->getSize().x,
+										   camera->getView()->getCenter().y - camera->getView()->getSize().y);
+				}
+				else if (event.key.code == sf::Keyboard::C && !menu->isActive()) {
+					gui->open(!gui->isActive());
+					background.setPosition(camera->getView()->getCenter().x - camera->getView()->getSize().x,
+										   camera->getView()->getCenter().y - camera->getView()->getSize().y);
+				}
 			}
 		}
 	}
 
 	if (!is_gameover) {
-		if (is_active && !menu->isActive()) {
+		if (!menu->isActive()) {
 
-			if (player->getHealthPointsValue() <= 0) {
+			if (main_player->getHealthPointsValue() <= 0) {
 				is_gameover = true;
 				return;
 			}
 
+			
 			if (enemies.size() == 0) {
 				enemies.push_back(new Enemy(sf::Vector2f(16, 32), sf::Vector2f(7, 23), "Tojic", 100, 100, 0.15, 10, "Churka"));
 				enemies[0]->setPosition(8 * 32, 10 * 32);
@@ -176,16 +204,19 @@ void Game::update() {
 				enemies[1]->setGame(this);
 			}
 
-			for (int i = 0; i < enemies.size(); i++) enemies[i]->update(delta_time, player, map);
-			
+			for (int i = 0; i < enemies.size(); i++) enemies[i]->update(delta_time, main_player, map);
+
 			if (gui->isActive()) {
 				gui->update(event, camera, delta_time);
 			}
-			player->update(event, delta_time, map);
-			map->update(player);
+			if (is_active) main_player->update(event, delta_time, map);
+			for (auto player = players.begin(); player != players.end(); player++) {
+				player->second->update(delta_time);
+			}
 
-			camera->update(sf::Vector2f(player->getObjectPosition().x + player->getGlobalBounds().width / 2,
-						   player->getObjectPosition().y + player->getGlobalBounds().height / 2), map);
+			map->update(main_player);
+
+			camera->update(main_player->getCenter());
 
 			window->setView(*camera->getView());
 		}
@@ -197,7 +228,7 @@ void Game::update() {
 		camera->getView()->setSize(sf::Vector2f(window->getSize()));
 		window->setView(*camera->getView());
 		window->clear();
-		gameover_text.setPosition(camera->getView()->getCenter().x - gameover_text.getGlobalBounds().width /2, camera->getView()->getCenter().y - gameover_text.getGlobalBounds().height / 2);
+		gameover_text.setPosition(camera->getView()->getCenter().x - gameover_text.getGlobalBounds().width / 2, camera->getView()->getCenter().y - gameover_text.getGlobalBounds().height / 2);
 		window->draw(gameover_text);
 		window->display();
 		std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -216,7 +247,7 @@ void Game::render() {
 			window->draw(*menu);
 		}
 
-		if (gui->isActive()) {
+		else if (gui->isActive()) {
 			window->draw(background);
 			camera->setSize(1920, 1080);
 			window->draw(*gui);

@@ -10,3 +10,5 @@ Hover 1
 Sounds\\hover.wav
 Active 1
 Sounds\\active.wav
+LevelUp 1
+Sounds\\levelup.wav

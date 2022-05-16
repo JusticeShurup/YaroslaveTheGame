@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Animator.h"
 #include "States/IdleState.h"
+#include "Game.h"
 
 int Entity::sign(float value) {
 	if (value > 0) return 1;
@@ -72,16 +73,8 @@ Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size) : GameObject(
 	direction = "South";
 }
 
-Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name) : GameObject(entity_size, hitbox_size){
+Entity::Entity(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name) : GameObject(entity_size, hitbox_size), nickname(name){
            
-	this->nickname.setFont(TextureContainer::getInstance()->getFont());                                               
-	this->nickname.setString(name);                                                               
-	this->nickname.setFillColor(sf::Color::White);
-	this->nickname.setOutlineThickness(1);
-	this->nickname.setOutlineColor(sf::Color::Black);
-	this->nickname.setCharacterSize(5);
-	this->nickname.setPosition(getObjectPosition().x, getObjectPosition().y + this->nickname.getGlobalBounds().height);
-
 	setName(name);
 	setTexturesName(textures_name);
 	animator = new Animator(this, textures_name);
@@ -139,7 +132,7 @@ Game* Entity::getGame() const{
 	return game;
 }
 
-sf::Text* Entity::getNickname() {
+Nickname* Entity::getNickname() {
 	return &nickname;
 }
 
@@ -269,8 +262,11 @@ bool Entity::canSwitchState() {
 
 void Entity::update(float delta_time) {
 	add_hp_timer += delta_time;
-	if(is_in_fight) in_fight_timer += delta_time;
-	
+
+	if (is_in_fight) in_fight_timer += delta_time;
+
+	nickname.setPosition(getObjectPosition().x + getGlobalBounds().width / 2 - nickname.getShape().getSize().x / 2, getObjectPosition().y - 6);
+
 	if (in_fight_timer > 10) {
 		is_in_fight = false;
 		in_fight_timer = 0;
@@ -328,7 +324,7 @@ float Entity::calcDistance(sf::Vector2f pos, sf::Vector2f new_pos) {
 
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 	GameObject::draw(target, states);
-	//target.draw(nickname);
+	target.draw(nickname);
 	if (health_bar) target.draw(*health_bar);
 	if (stamina_bar) target.draw(*stamina_bar);
 }

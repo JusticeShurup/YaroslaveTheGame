@@ -86,4 +86,3 @@ void HurtState::update(float delta_time, Entity* target, Map* map) {
 		return;
 	}
 }
-

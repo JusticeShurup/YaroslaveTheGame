@@ -26,4 +26,3 @@ private:
 	static SoundContainer* instance;
 };
 #endif
-

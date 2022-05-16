@@ -1,14 +1,19 @@
 #include "Camera.h"
 
-Camera::Camera(sf::Vector2f size, sf::Vector2f position, sf::RenderWindow* window) {
+Camera::Camera(sf::Vector2f size, sf::Vector2f position, sf::RenderWindow* window, sf::Vector2i map_end) {
 	default_height = size.y;
 	default_width = size.x;
 	view = sf::View(position, size);
 	view_for_render = sf::View(position, size);
 	game_window = window;
 
+	end_x = map_end.x;
+	end_y = map_end.y;
+
 	camera_locked_x = true;
 	camera_locked_y = true;
+
+	changed_for_render = false;
 }
 
 sf::View* Camera::getDefaultView() {
@@ -36,6 +41,19 @@ void Camera::setPosition(sf::Vector2f position) {
 	game_window->setView(view);
 }
 
+void Camera::changeCameraToRender(sf::Vector2f center, sf::Vector2f size) {
+	if (!changed_for_render) {
+		view.setCenter(center);
+		view.setSize(size);
+	}
+	else {
+		view.setSize(size);
+		update(center);
+	}
+	game_window->setView(view);
+	changed_for_render = !changed_for_render;
+}
+
 bool Camera::isCameraLockedX() {
 	return camera_locked_x;
 }
@@ -44,19 +62,21 @@ bool Camera::isCameraLockedY() {
 	return camera_locked_y;
 }
 
-void Camera::update(sf::Vector2f pos, Map* map) {
-	if (pos.x - default_width / 2 > 0 && pos.x + default_width / 2 < map->getSize().x * map->getTilesetSize().x) {
+void Camera::update(sf::Vector2f pos) {
+	if (pos.x - default_width / 2 > 0 && pos.x + default_width / 2 < end_x) {
 		setPosition(pos.x, view.getCenter().y);
 		camera_locked_x = false;
 	}
 	else {
+		setPosition(pos.x - default_width / 2 < 0 ? 150 : end_x - 150, view.getCenter().y);
 		camera_locked_x = true;
 	}
-	if (pos.y - default_height / 2 > 0 && pos.y + default_height / 2 < map->getSize().y * map->getTilesetSize().y) {
+	if (pos.y - default_height / 2 > 0 && pos.y + default_height / 2 < end_y) {
 		setPosition(view.getCenter().x, pos.y);
 		camera_locked_y = false;
 	}
 	else {
+		setPosition(view.getCenter().x, pos.y - default_height / 2 < 0 ? 150 : end_y - 150);
 		camera_locked_y = true;
 	}
 	view_for_render.setCenter(pos);

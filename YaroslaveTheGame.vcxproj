@@ -157,7 +157,9 @@
     <ClCompile Include="Menu\MainMenu.cpp" />
     <ClCompile Include="Menu\Menu.cpp" />
     <ClCompile Include="Menu\PauseMenu.cpp" />
+    <ClCompile Include="Nickname.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="Sounds\SoundContainer.cpp" />
     <ClCompile Include="States\AttackState.cpp" />
     <ClCompile Include="States\HurtState.cpp" />
@@ -182,7 +184,9 @@
     <ClInclude Include="Menu\MainMenu.h" />
     <ClInclude Include="Menu\Menu.h" />
     <ClInclude Include="Menu\PauseMenu.h" />
+    <ClInclude Include="Nickname.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="Sounds\SoundContainer.h" />
     <ClInclude Include="States\AttackState.h" />
     <ClInclude Include="States\HurtState.h" />

@@ -21,4 +21,3 @@ private:
 	sf::RectangleShape for_anim;
 };
 #endif
-

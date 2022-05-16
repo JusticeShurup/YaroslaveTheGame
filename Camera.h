@@ -5,7 +5,7 @@
 class Camera
 {
 public: 
-	Camera(sf::Vector2f size, sf::Vector2f position, sf::RenderWindow* game_window);
+	Camera(sf::Vector2f size, sf::Vector2f position, sf::RenderWindow* game_window, sf::Vector2i map_end);
 
 	// Change to default view and return new view 
 	
@@ -15,10 +15,12 @@ public:
 	void setPosition(float x, float y);
 	void setPosition(sf::Vector2f position); 
 	
+	void changeCameraToRender(sf::Vector2f center, sf::Vector2f size);
+
 
 	bool isCameraLockedY();
 	bool isCameraLockedX();
-	void update(sf::Vector2f position, Map* map);
+	void update(sf::Vector2f position);
 
 	sf::Transform getTransform(float x, float y, int width, int height);
 
@@ -28,7 +30,12 @@ public:
 	sf::View* getRenderView(); 
 
 	sf::RenderWindow* getWindow() const;
-private: 
+private:
+	bool changed_for_render;
+
+	int end_x;
+	int end_y;
+
 	int default_height;
 	int default_width;
 

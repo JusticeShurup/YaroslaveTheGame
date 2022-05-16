@@ -14,6 +14,9 @@ Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 	target_lock_timer = 0;
 	xp_to_nextlevel = 10;
 	
+	dx = 0;
+	dy = 0;
+
 	strength = 1;
 	fortitude = 1;
 	stamina = 1;
@@ -25,11 +28,14 @@ Player::Player() : Entity(sf::Vector2f(16, 32), sf::Vector2f(16, 32)) {
 
 }
 
-Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name)
+Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string textures_name, int maxHP, int maxStam, float speed, int damage, std::string name, GUI* gui)
 	: Entity(entity_size, hitbox_size, textures_name, maxHP, maxStam, speed, damage, name) {
 
 	current_xp = 0;
 	level = 1;
+
+	dx = 0;
+	dy = 0;
 
 	strength = 1;
 	fortitude = 1;
@@ -45,16 +51,18 @@ Player::Player(sf::Vector2f entity_size, sf::Vector2f hitbox_size, std::string t
 	
 	player_name = new sf::Text;
 	player_name->setCharacterSize(20);
-	player_name->setString("Yaroslave");
+	player_name->setString(name);
 	player_name->setFont(TextureContainer::getInstance()->getFont());
 	player_name->setFillColor(sf::Color::White);
 	player_name->setOutlineColor(sf::Color::Black);
 	player_name->setOutlineThickness(2);
-	player_name_pos = sf::Vector2f(getObjectPosition());
-	player_name->setPosition(player_name_pos);
-	player_name_pos.x = 0;
-	player_name_pos.y = 0;
 	setCanSwitchState(true);
+
+	this->gui = gui;
+}
+
+void Player::setGUI(GUI* gui) {
+	this->gui = gui;
 }
 
 void Player::lockNearestTarget(Map* map) {
@@ -70,7 +78,7 @@ void Player::lockNearestTarget(Map* map) {
 			}
 		}
 	}
-		
+
 	if (distance <= 300) {
 		target = new sf::RectangleShape(sf::Vector2f(entity[target_number]->getObjectShape()->getSize().x + 1, entity[target_number]->getObjectShape()->getSize().y + 1));
 		target->setFillColor(sf::Color(255, 255, 255, 0));
@@ -81,12 +89,74 @@ void Player::lockNearestTarget(Map* map) {
 	}
 }
 
+/*
+void Player::keyboardUpdate(sf::Event& event, float dt, Map* map) {
+
+	if (canSwitchState()) {
+
+		if (event.key.code == sf::Keyboard::Space && getStaminaValue() > getStamPerAttack() && canSwitchState()) {
+			damage_delivered = false;
+			setState(new AttackState(this));
+		}
+
+		else if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) {
+			if (event.key.code == sf::Keyboard::W) {
+				dy = speed * dt * (-500);
+				if (event.key.code == sf::Keyboard::LShift && getStaminaValue() > 10) {
+					dy = speed * dt * (-500) * 1.5;
+					if (getState()->getName() != "Run") setState(new RunState(this));
+				}
+				else {
+					if (getState()->getName() != "Walk") setState(new WalkState(this));
+				}
+				setDirection("North");
+			}
+			else if (event.key.code == sf::Keyboard::S) {
+				dy = speed * dt * 500;
+				if (event.key.code == sf::Keyboard::LShift && getStaminaValue() > 10) {
+					dy = speed * dt * (500) * 1.5;
+					if (getState()->getName() != "Run") setState(new RunState(this));
+				}
+				else {
+					if (getState()->getName() != "Walk") setState(new WalkState(this));
+				}
+				setDirection("South");
+			}
+			if (event.key.code == sf::Keyboard::A) {
+				dx = speed * dt * (-500);
+				if (event.key.code == sf::Keyboard::LShift && getStaminaValue() > 10) {
+					dx = speed * dt * (-500) * 1.5;
+					if (getState()->getName() != "Run") setState(new RunState(this));
+				}
+				else {
+					if (getState()->getName() != "Walk") setState(new WalkState(this));
+				}
+				setDirection("West");
+			}
+			else if (event.key.code == sf::Keyboard::D) {
+				dx = speed * dt * 500;
+				if (event.key.code == sf::Keyboard::LShift && getStaminaValue() > 10) {
+					dx = speed * dt * (500) * 1.5;
+					if (getState()->getName() != "Run") setState(new RunState(this));
+				}
+				else {
+					if (getState()->getName() != "Walk") setState(new WalkState(this));
+				}
+				setDirection("East");
+			}
+		}
+		else if (getState()->getName() != "Idle") {
+			setState(new IdleState(this));
+		}
+	}
+
+}
+*/
+
 void Player::update(sf::Event& event, float dt, Map* map) {
-	
-	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	float speed = getSpeedValue();
-	float dx = 0;
-	float dy = 0;
+
+	sf::Vector2f pos = getObjectPosition() + getHitboxPosition();
 	target_lock_timer += dt;
 
 	if (getState()->getName() == "Attack" && !damage_delivered) {
@@ -105,12 +175,18 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 		}
 	}
 
+	if (getState()->getName() == "Hurt") {
+		gui->setActive(false);
+	}
 
-	if (canSwitchState()) {
+	if (canSwitchState() && !gui->isActive()) {
+
+
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && getStaminaValue() > getStamPerAttack() && canSwitchState()) {
 			damage_delivered = false;
 			setState(new AttackState(this));
+			getGame()->getServer()->updatePosition();
 		}
 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -158,15 +234,21 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 				}
 				setDirection("East");
 			}
+			getGame()->getServer()->updatePosition();
 		}
-		else if (getState()->getName() != "Idle"){
+		else if (getState()->getName() != "Idle") {
 			setState(new IdleState(this));
+			getGame()->getServer()->updatePosition();
 		}
 	}
-
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && target_lock_timer > 0.2) {
 		if (!target) {
 			lockNearestTarget(map);
+			if (getState()->getName() != "Attack") {
+				setDirection();
+
+			}
 		}
 		else {
 			delete target;
@@ -175,7 +257,6 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 		}
 		target_lock_timer = 0;
 	}
-
 
 	if (map->isEntity(entity_target)) {
 		target->setPosition(entity_target->getObjectPosition().x - 1, entity_target->getObjectPosition().y - 1);
@@ -193,31 +274,33 @@ void Player::update(sf::Event& event, float dt, Map* map) {
 	sf::Vector2f new_pos(getObjectPosition());
 
 	if (!map->checkCollisionWithMap(sf::Vector2f(pos.x, pos.y + dy), this)) {
-		if (getGame()->getCamera()->isCameraLockedY()) {
-			player_name_pos.y += dy * (1920 / 300);
-		}
-		else {
-			player_name_pos.y = 0;
-		}
 		if (pos.y + dy > 0 && pos.y + dy < mapEndY) {
 			new_pos.y += dy;
 		}
 	}
 	if (!map->checkCollisionWithMap(sf::Vector2f(pos.x + dx, pos.y), this)) {
-		if (getGame()->getCamera()->isCameraLockedX()) {
-			player_name_pos.x += dx * (1080 / 300);
-		}
-		else {
-			player_name_pos.x = 0;
-		}
 		if (pos.x + dx > 0 && pos.x + dx < mapEndX) {
 			new_pos.x += dx;
 		}
 	}
 
 	setPosition(new_pos);
-	
 	Entity::update(dt);
+	dx = 0;
+	dy = 0;
+
+	for (int i = 0; i < text_animation_continue.size(); i++) {
+		if (text_animation_continue[i]) {
+			text_animation_continue.erase(text_animation_continue.begin() + i);
+			elapsed_time.erase(elapsed_time.begin() + i);
+			delete xp_texts[i];
+			xp_texts.erase(xp_texts.begin() + i);
+		}
+	}
+	for (int i = 0; i < xp_texts.size(); i++) {
+		elapsed_time[i] += dt;
+		updateText(1, elapsed_time[i], dt, xp_texts[i], text_animation_continue, i);
+	}
 }
 
 int Player::getXP() const{
@@ -242,9 +325,16 @@ void Player::setXP(int xp) {
 
 void Player::addXP(int xp) {
 	this->current_xp += xp;
+	xp_texts.push_back(initXPText("+" + std::to_string(xp) + " XP", sf::Vector2f(getObjectPosition().x, getObjectPosition().y + 20)));
+	elapsed_time.push_back(0);
+	text_animation_continue.push_back(false);
 	if (current_xp >= xp_to_nextlevel) {
 		current_xp %= xp;
 		level++;
+		SoundContainer::getInstance()->getSoundByName("LevelUp")->play();
+		xp_texts.push_back(initXPText("Level UP!", getObjectPosition()));
+		elapsed_time.push_back(0);
+		text_animation_continue.push_back(false);
 		free_atribute_points++;
 		xp_to_nextlevel = 10 * level;
 	}
@@ -328,14 +418,14 @@ int Player::getFreeAtributePoints() const {
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	sf::RenderStates text_states;
-
-	getGame()->getCamera()->setSize(1920, 1080);
-	text_states.transform = getGame()->getCamera()->getRenderView()->getInverseTransform() * getGame()->getCamera()->getTransform(0 + getGlobalBounds().width * 3, 0 + getGlobalBounds().height * 2.25, 1920, 1080);
-	getGame()->getCamera()->setSize(300, 300);
-	target.draw(*player_name, text_states);
 	Entity::draw(target, states);
 	if (this->target) {
 		target.draw(*this->target);
+	}
+	for (int i = 0; i < xp_texts.size(); i++) {
+		getGame()->getCamera()->setSize(1920, 1080);
+		target.draw(*xp_texts[i]);
+		getGame()->getCamera()->setSize(300, 300);
 	}
 }
 
@@ -362,5 +452,28 @@ void Player::setDirection(std::string dir) {
 			if (targetX - X > 0) Entity::setDirection("East"); //»дЄт вправо
 			else Entity::setDirection("West"); //»дЄт вверх
 		}
+	}
+}
+
+sf::Text* Player::initXPText(std::string string, sf::Vector2f pos) {
+	sf::Text* text = new sf::Text();
+	text->setFont(TextureContainer::getInstance()->getFont());
+	text->setString(string);
+	text->setCharacterSize(20);
+	text->setFillColor(sf::Color::White);
+	text->setOutlineColor(sf::Color::Black);
+	text->setOutlineThickness(3);
+	text->setPosition(pos);
+	return text;
+}
+
+void Player::updateText(float anim_time, float elapsed_time, float delta_time, sf::Text* text, std::vector<bool>& flags, int number) {
+
+	sf::Vector2f pos = text->getPosition(); 
+
+	text->setPosition(pos.x, pos.y - 100 * delta_time);
+	
+	if (elapsed_time >= anim_time) {
+		flags[number] = true;
 	}
 }

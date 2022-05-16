@@ -18,7 +18,9 @@ public:
 	~GUI();
 
 	bool isActive();
+	void setActive(bool flag);
 
+	void setPlayer(Player* player);
 
 	void updateAtributes(sf::Event& event, sf::Vector2f mouse_pos, float delta_time);
 

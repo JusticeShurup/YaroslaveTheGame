@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Enemy.h"
 #include "Menu/MainMenu.h"
+#include "Server.h"
 
 class Game
 {
@@ -26,7 +27,9 @@ public:
 	void setIsRunning(bool flag);
 
 	Player* getPlayer();
+	void addPlayer(Entity* player);
 	Camera* getCamera();
+	Server* getServer();
 
 
 	void run();
@@ -36,6 +39,9 @@ public:
 	void removeEnemy(Entity* enemy);
 
 private:
+	sf::Thread server_thr;
+	Server server;
+
 	sf::RenderWindow* window;
 	sf::Event event;
 	Menu* menu;
@@ -54,7 +60,8 @@ private:
 	bool is_paused;
 	bool is_active;
 
-	Player* player;
+	Player* main_player;
+	std::map<std::string, Entity*> players;
 	
 	sf::RectangleShape background;
 	GUI* gui;

@@ -2,6 +2,7 @@
 #define _ENTITY_H_
 #include "GameObject.h"
 #include "Map/Map.h"
+#include "Nickname.h"
 
 class State;
 
@@ -25,7 +26,7 @@ public:
 	void setGame(Game* game);
 	Game* getGame() const;
 
-	sf::Text* getNickname();
+	Nickname* getNickname();
 
 	sf::RectangleShape* getHealthBar();
 	void updateHealthBar();
@@ -87,7 +88,7 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private: 
-	sf::Text nickname;
+	Nickname nickname;
 
 	int health_points; 
 	int max_health_points;

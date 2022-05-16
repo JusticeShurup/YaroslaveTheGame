@@ -1,59 +1,45 @@
-#include "PauseMenu.h"
+#include "ProfileMenu.h"
 #include "../TextureContainer/TextureContainer.h"
 #include "../Sounds/SoundContainer.h"
 #include "../Game.h"
 #include "MainMenu.h"
 
-PauseMenu::PauseMenu(sf::RenderWindow* window, Game* game) 
-	: Menu(window, game), can_play_sounds{true} {
+ProfileMenu::ProfileMenu(sf::RenderWindow* window, Game* game)
+	: Menu(window, game), can_play_sounds{ true } {
+	buttons.push_back(new Button(400, 100, 200, 300, "Play"));
+	buttons[0]->setShapeColor("idle", sf::Color::White);
+	buttons[0]->setShapeColor("hover", sf::Color(128, 128, 128, 255));
+	buttons[0]->setShapeColor("active", sf::Color(128, 128, 128, 255));
+	buttons.push_back(new Button(400, 100, 200, window->getSize().y - 200, "Exit"));
+	buttons[1]->setShapeColor("idle", sf::Color::White);
+	buttons[1]->setShapeColor("hover", sf::Color(128, 128, 128, 255));
+	buttons[1]->setShapeColor("active", sf::Color(128, 128, 128, 255));
 
-	is_background_in_pos = false;
-	can_close = false;
-	is_in_starty = false;
-	Menu::setActive(false);
+	background[0] = new sf::RectangleShape(sf::Vector2f(window->getSize()));
+	background[0]->setTexture(TextureContainer::getInstance()->getMainMenuTexture(0));
+	background[0]->setPosition(0, 0);
+	background[1] = new sf::RectangleShape(sf::Vector2f(window->getSize()));
+	background[1]->setTexture(TextureContainer::getInstance()->getMainMenuTexture(0));
+	background[1]->setPosition(window->getSize().x, 0);
+	title = sf::RectangleShape(sf::Vector2f(700, 400));
+	title.setTexture(TextureContainer::getInstance()->getMainMenuTexture(1));
+	title.setPosition(buttons[0]->getShape()->getPosition().x + buttons[0]->getShape()->getSize().x / 2 - title.getSize().x / 2,
+		0);
 
-	getGame()->getCamera()->setSize(1920, 1080);
-	sf::Vector2f center_view = window->getView().getCenter();
-	window->setView(*getGame()->getCamera()->getDefaultView());
-	background = sf::RectangleShape(sf::Vector2f(350, 700));
-	background.setPosition(center_view.x - background.getSize().x / 2, center_view.y - window->getView().getSize().y / 2 - background.getSize().y);
-	background.setOutlineThickness(1);
-	background.setOutlineColor(sf::Color::Black);
-	background.setFillColor(sf::Color(152, 168, 192, 183));
+	is_camera_switched = false;
+	SoundContainer::getInstance()->getMenuMusic()[0]->play();
+	SoundContainer::getInstance()->getMenuMusic()[0]->setLoop(true);
 
-	unsigned int letters_size = 60;
-	pause_text = new sf::Text;
-	pause_text->setCharacterSize(letters_size);
-	pause_text->setPosition(background.getPosition().x + background.getSize().x / 2 - pause_text->getGlobalBounds().width / 2, background.getPosition().y + 5);
-	pause_text->setFont(TextureContainer::getInstance()->getFont());
-	pause_text->setOutlineThickness(3);
-	pause_text->setOutlineColor(sf::Color::Black);
-	pause_text->setString("Pause");
-
-	buttons.push_back(new Button(300, 100, 0, 0, "Resume", letters_size));
-	buttons.push_back(new Button(300, 100, 0, 0, "Exit", letters_size));
-	sf::Event event;
-	for (int i = 0; i < 2; i++) {
-		buttons[i]->hideShape(false);
-		buttons[i]->setShapeColor("idle", sf::Color(152, 168, 192, 183));
-		buttons[i]->setShapeColor("hover", sf::Color(152, 168, 230, 255));
-		buttons[i]->setShapeColor("active", sf::Color(152, 168, 230, 255));
-		buttons[i]->setOutlineShapeColor("hover", sf::Color::Black);
-		buttons[i]->setOutlineShapeColor("active", sf::Color::Black);
-		buttons[i]->setTextColor("idle", sf::Color::White);
-		buttons[i]->setTextColor("hover", sf::Color(200, 200, 200));
-		buttons[i]->setTextColor("active", sf::Color(200, 200, 200));
-		buttons[i]->getText()->setOutlineThickness(3);
-		buttons[i]->getText()->setOutlineColor(sf::Color::Black);
-		buttons[i]->update(sf::Vector2f(0, 0), event);
-	}
-
+	texture_for_anim = TextureContainer::getInstance()->getEntityTextures("Tojic", "Run", "East");
+	for_anim = sf::RectangleShape(sf::Vector2f(16 * 2, 32 * 4));
+	for_anim.setTexture(texture_for_anim[0]);
+	for_anim.setPosition(buttons[0]->getShape()->getPosition().x, buttons[0]->getShape()->getPosition().y - 40);
 
 }
 
-PauseMenu::~PauseMenu(){}
+ProfileMenu::~ProfileMenu() {}
 
-void PauseMenu::setActive(bool flag) {
+void ProfileMenu::setActive(bool flag) {
 	if (flag) Menu::setActive(flag);
 
 	if (!flag) {
@@ -61,7 +47,7 @@ void PauseMenu::setActive(bool flag) {
 	}
 }
 
-void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
+void ProfileMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 	camera->setSize(1920, 1080);
 	sf::Vector2f pos = background.getPosition();
 	float targetY = camera->getView()->getCenter().y - background.getSize().y / 2; // coordinate Y where background must be
@@ -110,7 +96,7 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 
 	buttons[0]->setPosition(pos.x + background.getSize().x / 2 - buttons[0]->getShape()->getSize().x / 2, pos.y + 80);
 	buttons[1]->setPosition(pos.x + background.getSize().x / 2 - buttons[0]->getShape()->getSize().x / 2, pos.y + background.getSize().y - 150);
-	
+
 
 	if (!(!is_background_in_pos && isActive()) && !(is_background_in_pos && can_close)) {
 		for (int i = 0; i < buttons.size(); i++) {
@@ -132,7 +118,7 @@ void PauseMenu::update(sf::Event& event, Camera* camera, float delta_time) {
 
 }
 
-void PauseMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+void ProfileMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	getGame()->getCamera()->setSize(1920, 1080);
 	target.draw(background);
 	target.draw(*pause_text);

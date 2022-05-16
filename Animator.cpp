@@ -86,7 +86,7 @@ void Animator::update(float delta_time) {
 
 	std::string direction = entity->getDirection();
 
-	entity->setTexture(animations[state][direction]->getComponent(elapsed_time));
+	if(elapsed_time > 0) entity->setTexture(animations[state][direction]->getComponent(elapsed_time));
 
 	if (elapsed_time > animations[state][direction]->getAnimationDuration()) {
 		elapsed_time = 0;

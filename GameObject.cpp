@@ -3,6 +3,7 @@
 
 GameObject::GameObject() : name("") {
 	object = new sf::RectangleShape();
+	object->setPosition(0, 0);
 	texture = nullptr;
 	hitboxes.emplace_back(sf::RectangleShape());
 	hitboxes[0].setFillColor(sf::Color(255, 255, 255, 128));
@@ -14,6 +15,7 @@ GameObject::GameObject() : name("") {
 
 GameObject::GameObject(sf::Vector2f obj_size, sf::Vector2f hitbox_size) : name("") {
 	object = new sf::RectangleShape(obj_size);
+	object->setPosition(0, 0);
 	texture = nullptr;
 	hitboxes.push_back(sf::RectangleShape(hitbox_size));
 	hitbox_delta_positions.push_back(sf::Vector2f(0, 0));
@@ -148,7 +150,7 @@ std::vector<sf::Vector2f> GameObject::getHitboxPositions() {
 }
 
 sf::Vector2f GameObject::getCenter() const{
-	return sf::Vector2f(hitboxes[0].getPosition().x + hitboxes[0].getSize().x / 2, hitboxes[0].getPosition().y + hitboxes[0].getSize().y / 2);
+	return sf::Vector2f(getObjectPosition().x + getGlobalBounds().width / 2, getObjectPosition().y + getGlobalBounds().height / 2);
 }
 
 void GameObject::showObjectOutlines() {

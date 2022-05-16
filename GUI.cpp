@@ -125,6 +125,10 @@ bool GUI::isActive() {
 	return active;
 }
 
+void GUI::setActive(bool flag) {
+	active = flag;
+}
+
 void GUI::updateAtributes(sf::Event& event, sf::Vector2f mouse_pos, float delta_time) {
 	click_timer += delta_time;
 	for (int i = 0; i < 6; i++) {
@@ -149,6 +153,10 @@ void GUI::updateAtributes(sf::Event& event, sf::Vector2f mouse_pos, float delta_
 	}
 
 	can_draw_buttons = false;
+}
+
+void GUI::setPlayer(Player* player) {
+	this->player = player;
 }
 
 void GUI::open(bool flag) {
@@ -201,7 +209,7 @@ void GUI::update(sf::Event& event, Camera* camera, float delta_time) {
 	}
 
 	for (int i = 0; i < 6; i++) {
-		inventory_shapes[i].setPosition(background.getPosition().x + 5 + i * (inventory_shapes[i].getSize().x + 10), background.getPosition().y + background.getSize().y - 10 - inventory_shapes[i].getSize().y);
+		inventory_shapes[i].setPosition(background.getPosition().x + 30 + i * (inventory_shapes[i].getSize().x + 30), background.getPosition().y + background.getSize().y - 10 - inventory_shapes[i].getSize().y);
 		level_upgrade_buttons[i]->setPosition(atribute_text_level_shapes[int(floor(i / 2))].getPosition().x + atribute_text_level_shapes[int(floor(i / 2))].getSize().x + 10 + 60 * (i % 2 == 0 ? 0 : 1), atribute_text_level_shapes[int(floor(i / 2))].getPosition().y);
 	}
 
@@ -224,7 +232,7 @@ void GUI::update(sf::Event& event, Camera* camera, float delta_time) {
 
 	// Проверка кнопок
 	sf::Vector2f mouse_pos = sf::Vector2f(camera->getWindow()->mapPixelToCoords(sf::Vector2i(sf::Mouse::getPosition())));
-	if (player->getFreeAtributePoints() > 0) updateAtributes(event, sf::Vector2f(mouse_pos.x - 5, mouse_pos.y - 24), delta_time);
+	if (player->getFreeAtributePoints() > 0) updateAtributes(event, mouse_pos, delta_time);
 	camera->setSize(300, 300);
 
 	player_for_anim->update(delta_time);
